@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
@@ -44,169 +45,71 @@ const Header = () => {
 
   return (
     <>
+      {/*
+        Only truly CSS-only things that Tailwind cannot express:
+        - @import for Google Fonts
+        - @keyframes animations
+        - clip-path polygon helpers
+        - ::before / ::after pseudo-elements
+        - CSS custom-property driven scan-line
+        Everything else is pure Tailwind utility classes.
+      */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Cinzel:wght@400;600&display=swap');
 
-        :root {
-          --gold: #C9A84C;
-          --gold-bright: #FFD700;
-          --gold-glow: rgba(201,168,76,0.5);
-          --dark: #020205;
-          --glass: rgba(2,2,5,0.75);
-          --glass-border: rgba(201,168,76,0.18);
-        }
+        .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+        .font-cinzel   { font-family: 'Cinzel', serif; }
 
-        /* ── NAV BASE ── */
-        .rbl-nav {
-          position: fixed;
-          top: 0; left: 0; right: 0;
-          z-index: 9999;
-          transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
-          font-family: 'Rajdhani', sans-serif;
-        }
-
-        /* Scrolled glass state */
-        .rbl-nav.scrolled .nav-inner {
-          background: var(--glass);
-          backdrop-filter: blur(24px) saturate(1.6);
-          -webkit-backdrop-filter: blur(24px) saturate(1.6);
-          border-bottom: 1px solid var(--glass-border);
-          box-shadow: 0 4px 40px rgba(0,0,0,0.6), 0 0 60px rgba(201,168,76,0.04);
-        }
-        .rbl-nav.scrolled .nav-inner::after {
-          opacity: 1;
-        }
-
-        /* Transparent state */
-        .nav-inner {
-          position: relative;
-          padding: 0 32px;
-          transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
-          background: transparent;
-        }
-        /* Gold scan line that appears on scroll */
-        .nav-inner::after {
-          content: '';
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold-bright) 50%, var(--gold) 70%, transparent 100%);
-          opacity: 0;
-          transition: opacity 0.4s;
-        }
-
-        /* Top HUD micro-bar */
-        .hud-micro {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 5px 0;
-          border-bottom: 1px solid rgba(201,168,76,0.07);
-          overflow: hidden;
-        }
-        .hud-micro-text {
-          font-size: 9px;
-          letter-spacing: 0.28em;
-          text-transform: uppercase;
-          color: rgba(201,168,76,0.35);
-        }
-        .hud-dot {
-          display: inline-block;
-          width: 5px; height: 5px;
-          border-radius: 50%;
-          background: var(--gold);
-          box-shadow: 0 0 6px var(--gold-glow);
-          animation: navBlink 2.4s ease-in-out infinite;
-          margin: 0 8px;
-          vertical-align: middle;
+        @keyframes goldFlow {
+          0%   { background-position: 0%   center; }
+          100% { background-position: 200% center; }
         }
         @keyframes navBlink {
-          0%,100% { opacity:1; } 50% { opacity:0.2; }
+          0%, 100% { opacity: 1;   }
+          50%       { opacity: 0.2; }
         }
 
-        /* ── MAIN ROW ── */
-        .nav-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 14px 0;
-        }
-
-        /* ── LOGO ── */
-        .rbl-logo {
-          text-decoration: none;
-          display: flex;
-          flex-direction: column;
-          line-height: 1;
-          position: relative;
-        }
-        .logo-top {
-          font-family: 'Cinzel', serif;
-          font-size: 22px;
-          font-weight: 600;
+        .animate-gold-flow {
           background: linear-gradient(90deg, #C9A84C, #FFD700, #C9A84C);
           background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
           animation: goldFlow 4s linear infinite;
-          letter-spacing: 0.05em;
         }
-        @keyframes goldFlow {
-          0% { background-position: 0% center; }
-          100% { background-position: 200% center; }
+        .animate-blink { animation: navBlink 2.4s ease-in-out infinite; }
+
+        /* clip-path shortcuts */
+        .clip-nav-btn  { clip-path: polygon(6px  0%, 100% 0%, calc(100% - 6px)  100%, 0% 100%); }
+        .clip-nav-link { clip-path: polygon(8px  0%, 100% 0%, calc(100% - 8px)  100%, 0% 100%); }
+        .clip-cta      { clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%); }
+
+        /* Scan-line on scrolled state via ::after */
+        .nav-inner::after {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, #C9A84C 30%, #FFD700 50%, #C9A84C 70%, transparent 100%);
+          opacity: 0;
+          transition: opacity 0.4s;
         }
-        .logo-sub {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 9px;
-          letter-spacing: 0.35em;
-          text-transform: uppercase;
-          color: rgba(201,168,76,0.45);
-          margin-top: 2px;
-        }
+        .nav-inner.scrolled::after { opacity: 1; }
+
+        /* Logo underline reveal */
         .logo-accent {
           position: absolute;
           bottom: -4px; left: 0;
           width: 100%; height: 1px;
-          background: linear-gradient(90deg, var(--gold), transparent);
+          background: linear-gradient(90deg, #C9A84C, transparent);
           transform: scaleX(0);
           transform-origin: left;
           transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
         }
         .rbl-logo:hover .logo-accent { transform: scaleX(1); }
 
-        /* ── DESKTOP LINKS ── */
-        .nav-links {
-          display: none;
-          align-items: center;
-          gap: 4px;
-          list-style: none;
-          margin: 0; padding: 0;
-        }
-        @media (min-width: 768px) {
-          .nav-links { display: flex; }
-        }
-
-        .nav-link-item {
-          position: relative;
-        }
-        .nav-link-item a {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 18px;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.45);
-          text-decoration: none;
-          transition: color 0.3s;
-          position: relative;
-          clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-        }
-        .nav-link-item a::before {
+        /* Nav-link bg fill on hover / active */
+        .nav-link-anchor::before {
           content: '';
           position: absolute;
           inset: 0;
@@ -215,66 +118,26 @@ const Header = () => {
           transition: opacity 0.3s;
           clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
         }
-        .nav-link-item a:hover { color: var(--gold); }
-        .nav-link-item a:hover::before { opacity: 1; }
+        .nav-link-anchor:hover::before,
+        .nav-link-anchor.is-active::before { opacity: 1; }
 
-        .nav-link-item a.active {
-          color: var(--gold);
-          text-shadow: 0 0 12px rgba(255,215,0,0.4);
-        }
-        .nav-link-item a.active::before { opacity: 1; }
-
-        /* Bottom bar under active link */
-        .nav-link-item a .link-bar {
+        /* Nav-link underbar */
+        .link-bar {
           position: absolute;
           bottom: 0; left: 18px; right: 18px;
           height: 1px;
-          background: var(--gold);
-          box-shadow: 0 0 6px var(--gold-glow);
+          background: #C9A84C;
+          box-shadow: 0 0 6px rgba(201,168,76,0.5);
           transform: scaleX(0);
           transform-origin: left;
           transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
         }
-        .nav-link-item a:hover .link-bar,
-        .nav-link-item a.active .link-bar { transform: scaleX(1); }
+        .nav-link-anchor:hover .link-bar,
+        .nav-link-anchor.is-active .link-bar { transform: scaleX(1); }
 
-        /* Link index number */
-        .link-idx {
-          font-size: 8px;
-          color: rgba(201,168,76,0.3);
-          font-weight: 400;
-          margin-right: 2px;
-          vertical-align: super;
-        }
-
-        /* ── CTA BUTTON ── */
-        .nav-cta {
-          display: none;
-        }
-        @media (min-width: 768px) {
-          .nav-cta { display: inline-flex; }
-        }
-        .nav-cta a {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 24px;
-          background: linear-gradient(135deg, #C9A84C, #FFD700);
-          color: #000;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          text-decoration: none;
-          clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-          transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-          box-shadow: 0 0 20px rgba(255,215,0,0.2);
-          margin-left: 16px;
-          position: relative;
-          overflow: hidden;
-        }
-        .nav-cta a::before {
+        /* CTA shimmer */
+        .nav-cta-link { position: relative; overflow: hidden; }
+        .nav-cta-link::before {
           content: '';
           position: absolute;
           inset: 0;
@@ -282,159 +145,91 @@ const Header = () => {
           opacity: 0;
           transition: opacity 0.3s;
         }
-        .nav-cta a:hover::before { opacity: 0.15; }
-        .nav-cta a:hover {
-          box-shadow: 0 0 35px rgba(255,215,0,0.45);
-          transform: translateY(-2px);
-        }
+        .nav-cta-link:hover::before { opacity: 0.15; }
 
-        /* ── HAMBURGER ── */
-        .nav-hamburger {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: flex-end;
-          gap: 5px;
-          width: 36px;
-          height: 36px;
-          background: none;
-          border: 1px solid rgba(201,168,76,0.2);
-          cursor: pointer;
-          padding: 8px;
-          transition: border-color 0.3s;
-          clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-        }
-        @media (min-width: 768px) { .nav-hamburger { display: none; } }
-        .nav-hamburger:hover { border-color: rgba(201,168,76,0.5); }
-        .hb-line {
-          height: 1px;
-          background: var(--gold);
-          transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
-          display: block;
-        }
-        .hb-line:nth-child(1) { width: 100%; }
-        .hb-line:nth-child(2) { width: 70%; }
-        .hb-line:nth-child(3) { width: 50%; }
-        .nav-hamburger.open .hb-line:nth-child(1) { transform: translateY(6px) rotate(45deg); width: 100%; }
-        .nav-hamburger.open .hb-line:nth-child(2) { opacity: 0; transform: translateX(8px); }
-        .nav-hamburger.open .hb-line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); width: 100%; }
-
-        /* ── MOBILE MENU ── */
+        /* Mobile menu slide */
         .mobile-menu {
-          position: absolute;
-          top: calc(100% + 1px);
-          left: 0; right: 0;
-          background: rgba(2,2,5,0.97);
-          backdrop-filter: blur(30px);
-          border-bottom: 1px solid rgba(201,168,76,0.15);
-          border-top: 1px solid rgba(201,168,76,0.08);
           overflow: hidden;
           max-height: 0;
-          transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
           opacity: 0;
+          transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
         }
-        .mobile-menu.open {
-          max-height: 400px;
-          opacity: 1;
-        }
-        .mobile-menu-inner {
-          padding: 16px 24px 24px;
-        }
-        .mobile-link {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 14px 0;
-          border-bottom: 1px solid rgba(201,168,76,0.06);
-          text-decoration: none;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.5);
-          transition: color 0.3s, padding-left 0.3s;
-        }
-        .mobile-link:last-child { border-bottom: none; }
-        .mobile-link:hover, .mobile-link.active {
-          color: var(--gold);
-          padding-left: 8px;
-        }
-        .mobile-link-num {
-          font-size: 10px;
-          color: rgba(201,168,76,0.25);
-          font-weight: 400;
-        }
-        .mobile-link-arrow {
-          font-size: 16px;
-          color: rgba(201,168,76,0.3);
-          transition: color 0.3s, transform 0.3s;
-        }
-        .mobile-link:hover .mobile-link-arrow {
-          color: var(--gold);
+        .mobile-menu.open { max-height: 400px; opacity: 1; }
+
+        /* Mobile link arrow hover */
+        .mobile-link:hover .mobile-arrow,
+        .mobile-link.is-active .mobile-arrow {
+          color: #C9A84C;
           transform: translateX(4px);
         }
-        .mobile-cta-wrap {
-          padding-top: 20px;
-        }
-        .mobile-cta {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 8px;
-          padding: 14px;
-          background: linear-gradient(135deg, #C9A84C, #FFD700);
-          color: #000;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          text-decoration: none;
-          clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-          transition: box-shadow 0.3s;
-          box-shadow: 0 0 24px rgba(255,215,0,0.25);
-        }
-        .mobile-cta:hover { box-shadow: 0 0 40px rgba(255,215,0,0.4); }
       `}</style>
 
-      <nav ref={menuRef} className={`rbl-nav${isScrolled ? " scrolled" : ""}`}>
-        <div className="nav-inner">
-          {/* HUD micro bar */}
-          <div className="hud-micro">
-            <span className="hud-micro-text">
-              <span className="hud-dot" />
-              SYS · ONLINE
+      <nav
+        ref={menuRef}
+        className="fixed top-1 left-2.5 right-2.5 z-9999 transition-all duration-500 font-rajdhani"
+      >
+        {/* Inner wrapper — glass blur when scrolled */}
+        <div
+          className={[
+            "nav-inner relative px-8 transition-all duration-500",
+            isScrolled
+              ? "scrolled bg-[rgba(2,2,5,0.75)] backdrop-blur-2xl border-b border-[rgba(201,168,76,0.18)] shadow-[0_4px_40px_rgba(0,0,0,0.6),0_0_60px_rgba(201,168,76,0.04)]"
+              : "bg-transparent",
+          ].join(" ")}
+        >
+          {/* ── HUD micro bar ── */}
+          <div className="flex justify-between items-center py-1.25 border-b border-[rgba(201,168,76,0.07)] overflow-hidden">
+            <span className="font-rajdhani text-[9px] tracking-[0.28em] uppercase text-[rgba(201,168,76,0.35)]">
+              <span className="inline-block w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_6px_rgba(201,168,76,0.5)] animate-blink mr-2 align-middle" />
+              Rithu Business Lanka
             </span>
-            <span className="hud-micro-text">{time}</span>
-            <span className="hud-micro-text">
+            <span className="font-rajdhani text-[9px] tracking-[0.28em] uppercase text-[rgba(201,168,76,0.35)]">
+              {time}
+            </span>
+            <span className="font-rajdhani text-[9px] tracking-[0.28em] uppercase text-[rgba(201,168,76,0.35)]">
               COLOMBO · LK
-              <span className="hud-dot" />
+              <span className="inline-block w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_6px_rgba(201,168,76,0.5)] animate-blink ml-2 align-middle" />
             </span>
           </div>
 
-          {/* Main nav row */}
-          <div className="nav-row">
+          {/* ── Main nav row ── */}
+          <div className="flex justify-between items-center py-3.5">
             {/* Logo */}
-            <Link href="/" className="rbl-logo">
-              <span className="logo-top">Rithu Social</span>
-              <span className="logo-sub">Business Lanka Marketing</span>
+            <Link
+              href="/"
+              className="rbl-logo relative flex flex-col leading-none no-underline"
+            >
+              <span className="animate-gold-flow font-cinzel text-[22px] font-semibold tracking-[0.05em]">
+                Rithu Bussiness Lanka
+              </span>
+              <span className="font-rajdhani text-[9px] tracking-[0.35em] uppercase text-[rgba(201,168,76,0.45)] mt-0.5">
+                Business Lanka Marketing
+              </span>
               <span className="logo-accent" />
             </Link>
 
-            {/* Desktop nav links */}
-            <ul className="nav-links">
+            {/* Desktop links */}
+            <ul className="hidden md:flex items-center gap-1 list-none m-0 p-0">
               {navItems.map((item, i) => {
                 const href = `#${item.toLowerCase().replace(" ", "-")}`;
                 const isActive = activeItem === item;
                 return (
-                  <li className="nav-link-item" key={item}>
+                  <li key={item} className="relative">
                     <Link
                       href={href}
-                      className={isActive ? "active" : ""}
                       onClick={() => setActiveItem(item)}
+                      className={[
+                        "nav-link-anchor clip-nav-link relative inline-flex items-center gap-1.5 px-4.5 py-2",
+                        "font-rajdhani text-[12px] font-semibold tracking-[0.18em] uppercase no-underline",
+                        "transition-colors duration-300",
+                        isActive
+                          ? "is-active text-[#C9A84C] [text-shadow:0_0_12px_rgba(255,215,0,0.4)]"
+                          : "text-[rgba(255,255,255,0.45)] hover:text-[#C9A84C]",
+                      ].join(" ")}
                     >
-                      <span className="link-idx">0{i + 1}</span>
+                      <span className="text-[8px] text-[rgba(201,168,76,0.3)] font-normal align-super mr-0.5">
+                        0{i + 1}
+                      </span>
                       {item}
                       <span className="link-bar" />
                     </Link>
@@ -443,27 +238,65 @@ const Header = () => {
               })}
             </ul>
 
-            {/* CTA + hamburger */}
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div className="nav-cta">
-                <Link href="#contact">Get Started ›</Link>
+            {/* Right side: CTA + hamburger */}
+            <div className="flex items-center">
+              {/* CTA — desktop only */}
+              <div className="hidden md:inline-flex ml-4">
+                <Link
+                  href="#contact"
+                  className={[
+                    "nav-cta-link clip-cta inline-flex items-center gap-2 px-6 py-2.5",
+                    "bg-linear-to-br from-[#C9A84C] to-[#FFD700] text-black",
+                    "font-rajdhani text-[11px] font-bold tracking-[0.2em] uppercase no-underline",
+                    "shadow-[0_0_20px_rgba(255,215,0,0.2)]",
+                    "transition-all duration-300 hover:shadow-[0_0_35px_rgba(255,215,0,0.45)] hover:-translate-y-0.5",
+                  ].join(" ")}
+                >
+                  Get Started ›
+                </Link>
               </div>
 
+              {/* Hamburger — mobile only */}
               <button
-                className={`nav-hamburger${isOpen ? " open" : ""}`}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Toggle menu"
+                className={[
+                  "clip-nav-btn flex md:hidden flex-col justify-center items-end gap-1.25",
+                  "w-9 h-9 bg-transparent border border-[rgba(201,168,76,0.2)] cursor-pointer px-2",
+                  "transition-colors duration-300 hover:border-[rgba(201,168,76,0.5)]",
+                ].join(" ")}
               >
-                <span className="hb-line" />
-                <span className="hb-line" />
-                <span className="hb-line" />
+                <span
+                  className={[
+                    "block h-px bg-[#C9A84C] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                    isOpen ? "w-full translate-y-1.5 rotate-45" : "w-full",
+                  ].join(" ")}
+                />
+                <span
+                  className={[
+                    "block h-px bg-[#C9A84C] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                    isOpen ? "opacity-0 translate-x-2 w-[70%]" : "w-[70%]",
+                  ].join(" ")}
+                />
+                <span
+                  className={[
+                    "block h-px bg-[#C9A84C] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                    isOpen ? "w-full -translate-y-1.5 -rotate-45" : "w-[50%]",
+                  ].join(" ")}
+                />
               </button>
             </div>
           </div>
 
-          {/* Mobile menu */}
-          <div className={`mobile-menu${isOpen ? " open" : ""}`}>
-            <div className="mobile-menu-inner">
+          {/* ── Mobile menu ── */}
+          <div
+            className={`mobile-menu absolute top-full left-0 right-0
+              bg-[rgba(2,2,5,0.97)] backdrop-blur-[30px]
+              border-b border-[rgba(201,168,76,0.15)]
+              border-t border-t-[rgba(201,168,76,0.08)]
+              ${isOpen ? "open" : ""}`}
+          >
+            <div className="px-6 pt-4 pb-6">
               {navItems.map((item, i) => {
                 const href = `#${item.toLowerCase().replace(" ", "-")}`;
                 const isActive = activeItem === item;
@@ -471,26 +304,45 @@ const Header = () => {
                   <Link
                     key={item}
                     href={href}
-                    className={`mobile-link${isActive ? " active" : ""}`}
                     onClick={() => {
                       setActiveItem(item);
                       setIsOpen(false);
                     }}
+                    className={[
+                      "mobile-link flex items-center justify-between py-3.5",
+                      "border-b border-[rgba(201,168,76,0.06)]",
+                      "font-rajdhani text-[14px] font-semibold tracking-[0.2em] uppercase no-underline",
+                      "transition-all duration-300 hover:pl-2",
+                      isActive
+                        ? "is-active text-[#C9A84C] pl-2"
+                        : "text-[rgba(255,255,255,0.5)] hover:text-[#C9A84C]",
+                    ].join(" ")}
                   >
                     <span>
-                      <span className="mobile-link-num">0{i + 1} · </span>
+                      <span className="text-[10px] text-[rgba(201,168,76,0.25)] font-normal">
+                        0{i + 1} ·{" "}
+                      </span>
                       {item}
                     </span>
-                    <span className="mobile-link-arrow">›</span>
+                    <span className="mobile-arrow text-base text-[rgba(201,168,76,0.3)] transition-all duration-300">
+                      ›
+                    </span>
                   </Link>
                 );
               })}
 
-              <div className="mobile-cta-wrap">
+              {/* Mobile CTA */}
+              <div className="pt-5">
                 <Link
                   href="#contact"
-                  className="mobile-cta"
                   onClick={() => setIsOpen(false)}
+                  className={[
+                    "clip-cta flex justify-center items-center gap-2 p-3.5",
+                    "bg-linear-to-br from-[#C9A84C] to-[#FFD700] text-black",
+                    "font-rajdhani text-[12px] font-bold tracking-[0.2em] uppercase no-underline",
+                    "shadow-[0_0_24px_rgba(255,215,0,0.25)] transition-shadow duration-300",
+                    "hover:shadow-[0_0_40px_rgba(255,215,0,0.4)]",
+                  ].join(" ")}
                 >
                   Get Started ›
                 </Link>

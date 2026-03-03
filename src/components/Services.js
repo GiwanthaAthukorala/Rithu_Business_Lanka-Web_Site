@@ -1,3 +1,4 @@
+"use client";
 import React, { useRef, useEffect, useState } from "react";
 import {
   FaFacebook,
@@ -93,6 +94,19 @@ const services = [
   },
 ];
 
+/*
+  Kept in <style> — genuinely not expressible in Tailwind:
+  • @import Google Fonts
+  • @keyframes (blobDrift1, blobDrift2, titleGoldFlow)
+  • ::before / ::after on .svc-eyebrow (decorative lines flanking label)
+  • background-clip: text / -webkit-text-fill-color (gold gradient title)
+  • clip-path: polygon() on cards, icon wrap, footer button
+  • repeating/layered background-image grid pattern
+  • filter: blur() on blob divs (Tailwind's blur applies to the element itself, not as a filter-blur on bg)
+  • .svc-card hover child selector (.svc-card:hover .card-corner)
+  • card-bottom-bar transform-origin + scaleX driven by JS inline style
+  • card-cta gap hover (gap transition not possible in Tailwind)
+*/
 const ServiceCard = ({ service, index }) => {
   const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -113,24 +127,32 @@ const ServiceCard = ({ service, index }) => {
   return (
     <div
       ref={cardRef}
-      className="svc-card"
+      className="svc-card relative border border-[rgba(201,168,76,0.15)] backdrop-blur-xl
+        overflow-hidden cursor-pointer
+        transition-[border-color,box-shadow,transform] duration-400
+        ease-[cubic-bezier(0.16,1,0.3,1)]
+        hover:border-[rgba(201,168,76,0.35)]
+        hover:shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_40px_rgba(201,168,76,0.08)]
+        hover:-translate-y-1.5
+        bg-[rgba(255,255,255,0.025)] px-6 pt-7 pb-8"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(32px)",
         transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 0.07}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 0.07}s`,
+        clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Corner brackets */}
-      <span className="card-corner tl" />
-      <span className="card-corner tr" />
-      <span className="card-corner bl" />
-      <span className="card-corner br" />
+      {/* Corner HUD brackets */}
+      <span className="absolute top-1.5 left-1.5 w-3.5 h-3.5 pointer-events-none border-t border-l border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400 group-hover:border-[rgba(201,168,76,0.6)]" />
+      <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 pointer-events-none border-t border-r border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400" />
+      <span className="absolute bottom-1.5 left-1.5 w-3.5 h-3.5 pointer-events-none border-b border-l border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400" />
+      <span className="absolute bottom-1.5 right-1.5 w-3.5 h-3.5 pointer-events-none border-b border-r border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400" />
 
-      {/* Glow on hover */}
+      {/* Hover glow */}
       <div
-        className="card-glow"
+        className="absolute inset-0 pointer-events-none transition-opacity duration-500"
         style={{
           background: `radial-gradient(circle at 50% 0%, ${service.iconGlow} 0%, transparent 70%)`,
           opacity: hovered ? 1 : 0,
@@ -138,14 +160,20 @@ const ServiceCard = ({ service, index }) => {
       />
 
       {/* Top row */}
-      <div className="card-top-row">
-        <span className="card-tag">{service.tag}</span>
-        <span className="card-metric">{service.metric}</span>
+      <div className="flex justify-between items-center mb-5">
+        <span className="font-rajdhani text-[10px] font-semibold tracking-[0.25em] text-[rgba(201,168,76,0.4)]">
+          {service.tag}
+        </span>
+        <span className="font-rajdhani text-[9px] font-medium tracking-[0.15em] text-[rgba(255,255,255,0.2)] uppercase">
+          {service.metric}
+        </span>
       </div>
 
       {/* Icon */}
       <div
-        className="card-icon-wrap"
+        className="inline-flex items-center justify-center w-14.5 h-14.5
+          bg-[rgba(255,255,255,0.03)] border border-[rgba(201,168,76,0.12)]
+          rounded-sm mb-5 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           boxShadow: hovered
             ? `0 0 28px ${service.iconGlow}, 0 0 60px ${service.iconGlow}`
@@ -154,19 +182,26 @@ const ServiceCard = ({ service, index }) => {
             ? service.iconColor + "55"
             : "rgba(201,168,76,0.12)",
           transform: hovered ? "scale(1.1) translateY(-2px)" : "scale(1)",
+          clipPath: "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
         }}
       >
         <Icon style={{ color: service.iconColor, fontSize: 28 }} />
       </div>
 
       {/* Text */}
-      <h3 className="card-title">{service.title}</h3>
-      <p className="card-desc">{service.description}</p>
+      <h3 className="font-rajdhani text-[17px] font-bold tracking-[0.05em] text-[rgba(255,255,255,0.88)] uppercase m-0 mb-2.5">
+        {service.title}
+      </h3>
+      <p className="font-exo text-[13px] font-light text-[rgba(255,255,255,0.35)] leading-[1.7] m-0 mb-4.5">
+        {service.description}
+      </p>
 
       {/* CTA */}
       <a
         href="#contact"
-        className="card-cta"
+        className="card-cta inline-flex items-center gap-2 font-rajdhani text-[11px] font-semibold
+          tracking-[0.2em] uppercase text-[#C9A84C] no-underline
+          transition-[opacity,transform,gap] duration-350"
         style={{
           opacity: hovered ? 1 : 0,
           transform: hovered ? "translateY(0)" : "translateY(6px)",
@@ -186,7 +221,9 @@ const ServiceCard = ({ service, index }) => {
 
       {/* Bottom gold bar */}
       <div
-        className="card-bottom-bar"
+        className="absolute bottom-0 left-0 right-0 h-px
+          bg-[linear-gradient(90deg,transparent,#C9A84C,transparent)]
+          origin-left transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{ transform: hovered ? "scaleX(1)" : "scaleX(0)" }}
       />
     </div>
@@ -213,110 +250,24 @@ const Services = () => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Exo+2:wght@200;300;400&display=swap');
 
-        :root {
-          --gold: #C9A84C;
-          --gold-bright: #FFD700;
-          --gold-glow: rgba(201,168,76,0.5);
-          --dark: #020205;
-          --dark-2: #08080F;
-          --glass: rgba(255,255,255,0.025);
-          --glass-border: rgba(201,168,76,0.15);
-        }
+        .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+        .font-cinzel   { font-family: 'Cinzel', serif; }
+        .font-exo      { font-family: 'Exo 2', sans-serif; }
 
-        .svc-section {
-          position: relative;
-          background: radial-gradient(ellipse 100% 80% at 50% 0%, #0d0900 0%, var(--dark-2) 45%, #000008 100%);
-          padding: 120px 0 140px;
-          overflow: hidden;
-          font-family: 'Exo 2', sans-serif;
-        }
-
-        /* Background grid */
-        .svc-grid-bg {
-          position: absolute;
-          inset: 0;
-          background-image:
-            linear-gradient(rgba(201,168,76,0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201,168,76,0.035) 1px, transparent 1px);
-          background-size: 60px 60px;
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        /* Glow blobs */
-        .svc-blob {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(100px);
-          pointer-events: none;
-          z-index: 0;
-        }
-        .svc-blob-1 {
-          width: 500px; height: 500px;
-          top: -120px; left: -120px;
-          background: radial-gradient(circle, rgba(201,168,76,0.09) 0%, transparent 70%);
-          animation: blobDrift1 14s ease-in-out infinite;
-        }
-        .svc-blob-2 {
-          width: 600px; height: 600px;
-          bottom: -150px; right: -100px;
-          background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
-          animation: blobDrift2 18s ease-in-out infinite;
-        }
         @keyframes blobDrift1 {
-          0%,100% { transform: translate(0,0); } 50% { transform: translate(50px,70px); }
+          0%,100% { transform: translate(0,0); }
+          50%      { transform: translate(50px,70px); }
         }
         @keyframes blobDrift2 {
-          0%,100% { transform: translate(0,0); } 50% { transform: translate(-40px,-50px); }
+          0%,100% { transform: translate(0,0); }
+          50%      { transform: translate(-40px,-50px); }
+        }
+        @keyframes titleGoldFlow {
+          0%   { background-position: 0%   center; }
+          100% { background-position: 250% center; }
         }
 
-        /* ── HEADER ── */
-        .svc-header {
-          position: relative;
-          z-index: 10;
-          text-align: center;
-          margin-bottom: 80px;
-          padding: 0 24px;
-        }
-
-        .svc-eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.35em;
-          text-transform: uppercase;
-          color: rgba(201,168,76,0.55);
-          margin-bottom: 20px;
-        }
-        .svc-eyebrow::before, .svc-eyebrow::after {
-          content: '';
-          display: block;
-          width: 40px; height: 1px;
-          background: linear-gradient(90deg, transparent, var(--gold));
-        }
-        .svc-eyebrow::after {
-          background: linear-gradient(90deg, var(--gold), transparent);
-        }
-
-        .svc-title {
-          font-family: 'Cinzel', serif;
-          font-size: clamp(36px, 6vw, 68px);
-          font-weight: 700;
-          line-height: 1.0;
-          color: rgba(255,255,255,0.92);
-          margin: 0 0 8px;
-          letter-spacing: -0.01em;
-          opacity: 0;
-          transform: translateY(24px);
-          transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
-        }
-        .svc-title.show {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        /* Animated gradient title text */
         .svc-title-gold {
           background: linear-gradient(90deg, #C9A84C, #FFD700, #FFF3CC, #FFD700, #C9A84C);
           background-size: 250% auto;
@@ -326,261 +277,136 @@ const Services = () => {
           animation: titleGoldFlow 5s linear infinite;
           filter: drop-shadow(0 0 16px rgba(255,215,0,0.3));
         }
-        @keyframes titleGoldFlow {
-          0% { background-position: 0% center; }
-          100% { background-position: 250% center; }
+
+        /* Eyebrow flanking lines via ::before / ::after */
+        .svc-eyebrow::before, .svc-eyebrow::after {
+          content: '';
+          display: block;
+          width: 40px; height: 1px;
+          background: linear-gradient(90deg, transparent, #C9A84C);
+        }
+        .svc-eyebrow::after {
+          background: linear-gradient(90deg, #C9A84C, transparent);
         }
 
-        .svc-sub {
-          font-family: 'Exo 2', sans-serif;
-          font-size: clamp(14px, 1.8vw, 18px);
-          font-weight: 200;
-          color: rgba(255,255,255,0.35);
-          max-width: 520px;
-          margin: 20px auto 0;
-          line-height: 1.7;
-          opacity: 0;
-          transform: translateY(16px);
-          transition: opacity 0.8s 0.2s cubic-bezier(0.16,1,0.3,1), transform 0.8s 0.2s cubic-bezier(0.16,1,0.3,1);
-        }
-        .svc-sub.show { opacity: 1; transform: translateY(0); }
-
-        /* Gold divider under title */
-        .svc-divider {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          margin: 28px auto 0;
-          max-width: 300px;
-          opacity: 0;
-          transition: opacity 0.8s 0.3s;
-        }
-        .svc-divider.show { opacity: 1; }
-        .sd-line {
-          flex: 1; height: 1px;
-          background: linear-gradient(90deg, transparent, var(--gold));
-        }
-        .sd-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
-        .sd-diamond {
-          width: 7px; height: 7px;
-          background: var(--gold);
-          transform: rotate(45deg);
-          box-shadow: 0 0 10px var(--gold-glow), 0 0 20px var(--gold-glow);
+        /* Background grid — layered linear-gradients */
+        .svc-grid-bg {
+          background-image:
+            linear-gradient(rgba(201,168,76,0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(201,168,76,0.035) 1px, transparent 1px);
+          background-size: 60px 60px;
         }
 
-        /* ── GRID ── */
-        .svc-grid {
-          position: relative;
-          z-index: 10;
-          display: grid;
-          grid-template-columns: repeat(1, 1fr);
-          gap: 20px;
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 24px;
-        }
-        @media (min-width: 640px) { .svc-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .svc-grid { grid-template-columns: repeat(4, 1fr); } }
+        /* Blob animations */
+        .svc-blob-1 { animation: blobDrift1 14s ease-in-out infinite; }
+        .svc-blob-2 { animation: blobDrift2 18s ease-in-out infinite; }
 
-        /* ── CARD ── */
-        .svc-card {
-          position: relative;
-          background: var(--glass);
-          border: 1px solid var(--glass-border);
-          backdrop-filter: blur(20px);
-          padding: 28px 24px 32px;
-          overflow: hidden;
-          cursor: pointer;
-          transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s cubic-bezier(0.16,1,0.3,1);
-          clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
-        }
-        .svc-card:hover {
-          border-color: rgba(201,168,76,0.35);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.08);
-          transform: translateY(-6px);
-        }
-
-        /* Corner HUD brackets */
-        .card-corner {
-          position: absolute;
-          width: 14px; height: 14px;
-          pointer-events: none;
-          transition: border-color 0.4s;
-        }
-        .card-corner.tl { top: 6px; left: 6px; border-top: 1px solid rgba(201,168,76,0.25); border-left: 1px solid rgba(201,168,76,0.25); }
-        .card-corner.tr { top: 6px; right: 6px; border-top: 1px solid rgba(201,168,76,0.25); border-right: 1px solid rgba(201,168,76,0.25); }
-        .card-corner.bl { bottom: 6px; left: 6px; border-bottom: 1px solid rgba(201,168,76,0.25); border-left: 1px solid rgba(201,168,76,0.25); }
-        .card-corner.br { bottom: 6px; right: 6px; border-bottom: 1px solid rgba(201,168,76,0.25); border-right: 1px solid rgba(201,168,76,0.25); }
-        .svc-card:hover .card-corner { border-color: rgba(201,168,76,0.6); }
-
-        /* Hover glow */
-        .card-glow {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          transition: opacity 0.5s;
-        }
-
-        /* Top row */
-        .card-top-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-        .card-tag {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 10px;
-          font-weight: 600;
-          letter-spacing: 0.25em;
-          color: rgba(201,168,76,0.4);
-        }
-        .card-metric {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 9px;
-          font-weight: 500;
-          letter-spacing: 0.15em;
-          color: rgba(255,255,255,0.2);
-          text-transform: uppercase;
-        }
-
-        /* Icon */
-        .card-icon-wrap {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 58px; height: 58px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(201,168,76,0.12);
-          border-radius: 2px;
-          margin-bottom: 20px;
-          transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
-          clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-        }
-
-        .card-title {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 17px;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          color: rgba(255,255,255,0.88);
-          margin: 0 0 10px;
-          text-transform: uppercase;
-        }
-
-        .card-desc {
-          font-family: 'Exo 2', sans-serif;
-          font-size: 13px;
-          font-weight: 300;
-          color: rgba(255,255,255,0.35);
-          line-height: 1.7;
-          margin: 0 0 18px;
-        }
-
-        /* CTA */
-        .card-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          color: var(--gold);
-          text-decoration: none;
-          transition: opacity 0.35s, transform 0.35s, gap 0.3s;
-        }
+        /* card-cta gap on hover */
         .card-cta:hover { gap: 12px; }
 
-        /* Bottom bar */
-        .card-bottom-bar {
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, var(--gold), transparent);
-          transform-origin: left;
-          transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-        }
-
-        /* ── BOTTOM CTA ── */
-        .svc-footer {
-          position: relative;
-          z-index: 10;
-          text-align: center;
-          margin-top: 64px;
-          padding: 0 24px;
-        }
-        .svc-footer-label {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 11px;
-          letter-spacing: 0.3em;
-          text-transform: uppercase;
-          color: rgba(201,168,76,0.35);
-          margin-bottom: 20px;
-        }
+        /* Footer btn clip + hover */
         .svc-footer-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 16px 48px;
-          background: linear-gradient(135deg, #C9A84C, #FFD700, #C9A84C);
-          background-size: 200% auto;
-          color: #000;
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          text-decoration: none;
           clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
-          transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
-          box-shadow: 0 0 30px rgba(255,215,0,0.25);
+          background-size: 200% auto;
         }
         .svc-footer-btn:hover {
           background-position: right center;
-          box-shadow: 0 0 50px rgba(255,215,0,0.45);
-          transform: translateY(-3px);
         }
       `}</style>
 
-      <section id="services" className="svc-section">
-        <div className="svc-grid-bg" />
-        <div className="svc-blob svc-blob-1" />
-        <div className="svc-blob svc-blob-2" />
+      <section
+        id="services"
+        className="font-exo relative overflow-hidden py-30 pb-35
+          bg-[radial-gradient(ellipse_100%_80%_at_50%_0%,#0d0900_0%,#08080F_45%,#000008_100%)]"
+      >
+        {/* Background grid */}
+        <div className="svc-grid-bg absolute inset-0 pointer-events-none z-0" />
 
-        {/* Header */}
-        <div className="svc-header" ref={titleRef}>
-          <div className="svc-eyebrow">What We Offer</div>
+        {/* Glow blobs */}
+        <div
+          className="svc-blob-1 absolute rounded-full pointer-events-none z-0
+            w-125 h-125 -top-30 -left-30
+            bg-[radial-gradient(circle,rgba(201,168,76,0.09)_0%,transparent_70%)]
+            blur-[100px]"
+        />
+        <div
+          className="svc-blob-2 absolute rounded-full pointer-events-none z-0
+            w-150 h-150 -bottom-37.5 -right-25
+            bg-[radial-gradient(circle,rgba(201,168,76,0.07)_0%,transparent_70%)]
+            blur-[100px]"
+        />
 
-          <h2 className={`svc-title${titleVisible ? " show" : ""}`}>
+        {/* ── Header ── */}
+        <div ref={titleRef} className="relative z-10 text-center mb-20 px-6">
+          {/* Eyebrow */}
+          <div
+            className="svc-eyebrow inline-flex items-center gap-3
+            font-rajdhani text-[10px] font-medium tracking-[0.35em] uppercase
+            text-[rgba(201,168,76,0.55)] mb-5"
+          >
+            What We Offer
+          </div>
+
+          {/* Title */}
+          <h2
+            className={`font-cinzel text-[clamp(36px,6vw,68px)] font-bold leading-none
+              tracking-[-0.01em] text-[rgba(255,255,255,0.92)] m-0 mb-2
+              transition-[opacity,transform] duration-800 ease-[cubic-bezier(0.16,1,0.3,1)]
+              ${titleVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+          >
             Our <span className="svc-title-gold">Services</span>
           </h2>
 
-          <div className={`svc-divider${titleVisible ? " show" : ""}`}>
-            <div className="sd-line" />
-            <div className="sd-diamond" />
-            <div className="sd-line r" />
+          {/* Divider */}
+          <div
+            className={`flex items-center justify-center gap-3 mx-auto mt-7 max-w-75
+              transition-opacity duration-800 delay-300
+              ${titleVisible ? "opacity-100" : "opacity-0"}`}
+          >
+            <div className="flex-1 h-px bg-[linear-gradient(90deg,transparent,#C9A84C)]" />
+            <div className="w-1.75 h-1.75 bg-[#C9A84C] rotate-45 shadow-[0_0_10px_rgba(201,168,76,0.5),0_0_20px_rgba(201,168,76,0.5)]" />
+            <div className="flex-1 h-px bg-[linear-gradient(90deg,#C9A84C,transparent)]" />
           </div>
 
-          <p className={`svc-sub${titleVisible ? " show" : ""}`}>
+          {/* Sub */}
+          <p
+            className={`font-exo text-[clamp(14px,1.8vw,18px)] font-extralight
+              text-[rgba(255,255,255,0.35)] max-w-130 mx-auto mt-5 leading-[1.7]
+              transition-[opacity,transform] duration-800 delay-200 ease-[cubic-bezier(0.16,1,0.3,1)]
+              ${titleVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          >
             Comprehensive digital marketing solutions engineered for measurable
             growth across every platform.
           </p>
         </div>
 
         {/* Cards grid */}
-        <div className="svc-grid">
+        <div
+          className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5
+          max-w-7xl mx-auto px-6"
+        >
           {services.map((service, index) => (
             <ServiceCard key={index} service={service} index={index} />
           ))}
         </div>
 
         {/* Footer CTA */}
-        <div className="svc-footer">
-          <p className="svc-footer-label">Ready to scale your brand?</p>
-          <a href="#contact" className="svc-footer-btn">
+        <div className="relative z-10 text-center mt-16 px-6">
+          <p
+            className="font-rajdhani text-[11px] tracking-[0.3em] uppercase
+            text-[rgba(201,168,76,0.35)] mb-5"
+          >
+            Ready to scale your brand?
+          </p>
+          <a
+            href="#contact"
+            className="svc-footer-btn inline-flex items-center gap-2.5 px-12 py-4
+              bg-[linear-gradient(135deg,#C9A84C,#FFD700,#C9A84C)] text-black
+              font-rajdhani text-[13px] font-bold tracking-[0.2em] uppercase no-underline
+              shadow-[0_0_30px_rgba(255,215,0,0.25)]
+              transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
+              hover:shadow-[0_0_50px_rgba(255,215,0,0.45)] hover:-translate-y-0.75"
+          >
             Start Your Project ›
           </a>
         </div>
