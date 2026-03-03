@@ -249,7 +249,8 @@ const Footer = () => {
             <div>
               <div className="font-cinzel text-[26px] font-black tracking-[.02em] mb-3">
                 <span className="logo-r">Rithu</span>
-                <span className="text-white/55"> Sociol</span>
+                <span className="text-white/55">Bussiness</span>
+                <span className="logo-r">Lanka</span>
               </div>
               <div className="font-rajdhani text-[9px] tracking-[.35em] uppercase text-[#C9A84C]/38 mb-4">
                 Digital · Marketing · Excellence
@@ -345,8 +346,8 @@ const Footer = () => {
           {/* Bottom bar */}
           <div className="border-t border-[#C9A84C]/18 py-7 pb-10 flex items-center justify-between gap-4 flex-wrap">
             <div className="font-rajdhani text-[11px] tracking-[.2em] uppercase text-[#C9A84C]/28">
-              © {new Date().getFullYear()} Rithu Business Lanka · All rights
-              reserved
+              © {new Date().getFullYear()} Rithu Business Lanka(Giwantha
+              Athukorala) · All rights reserved
             </div>
             <div className="flex items-center gap-5">
               <div className="font-rajdhani flex items-center gap-2 text-[10px] tracking-[.25em] uppercase text-[#C9A84C]/32">
