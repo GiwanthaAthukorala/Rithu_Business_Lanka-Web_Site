@@ -45,22 +45,12 @@ const Header = () => {
 
   return (
     <>
-      {/*
-        Only truly CSS-only things that Tailwind cannot express:
-        - @import for Google Fonts
-        - @keyframes animations
-        - clip-path polygon helpers
-        - ::before / ::after pseudo-elements
-        - CSS custom-property driven scan-line
-        Everything else is pure Tailwind utility classes.
-      */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Cinzel:wght@400;600&display=swap');
-
         .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
         .font-cinzel   { font-family: 'Cinzel', serif; }
 
-        @keyframes goldFlow {
+        @keyframes blueFlow {
           0%   { background-position: 0%   center; }
           100% { background-position: 200% center; }
         }
@@ -69,65 +59,65 @@ const Header = () => {
           50%       { opacity: 0.2; }
         }
 
-        .animate-gold-flow {
-          background: linear-gradient(90deg, #C9A84C, #FFD700, #C9A84C);
+        .animate-blue-flow {
+          background: linear-gradient(90deg, #2B6CB0, #63B3ED, #C8D8E8, #63B3ED, #2B6CB0);
           background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          animation: goldFlow 4s linear infinite;
+          animation: blueFlow 4s linear infinite;
         }
         .animate-blink { animation: navBlink 2.4s ease-in-out infinite; }
 
-        /* clip-path shortcuts */
         .clip-nav-btn  { clip-path: polygon(6px  0%, 100% 0%, calc(100% - 6px)  100%, 0% 100%); }
         .clip-nav-link { clip-path: polygon(8px  0%, 100% 0%, calc(100% - 8px)  100%, 0% 100%); }
         .clip-cta      { clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%); }
 
-        /* Scan-line on scrolled state via ::after */
+        /* Scrolled scan-line */
         .nav-inner::after {
           content: '';
           position: absolute;
           bottom: 0; left: 0; right: 0;
           height: 1px;
-          background: linear-gradient(90deg, transparent 0%, #C9A84C 30%, #FFD700 50%, #C9A84C 70%, transparent 100%);
+          background: linear-gradient(90deg, transparent 0%, #63B3ED 30%, #A8D8FF 50%, #63B3ED 70%, transparent 100%);
           opacity: 0;
           transition: opacity 0.4s;
         }
         .nav-inner.scrolled::after { opacity: 1; }
 
-        /* Logo underline reveal */
+        /* Logo underline */
         .logo-accent {
           position: absolute;
           bottom: -4px; left: 0;
           width: 100%; height: 1px;
-          background: linear-gradient(90deg, #C9A84C, transparent);
+          background: linear-gradient(90deg, #63B3ED, transparent);
           transform: scaleX(0);
           transform-origin: left;
           transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
         }
         .rbl-logo:hover .logo-accent { transform: scaleX(1); }
 
-        /* Nav-link bg fill on hover / active */
+        /* Nav link bg fill */
+        .nav-link-anchor {
+          position: relative;
+        }
         .nav-link-anchor::before {
           content: '';
-          position: absolute;
-          inset: 0;
-          background: rgba(201,168,76,0.07);
-          opacity: 0;
-          transition: opacity 0.3s;
+          position: absolute; inset: 0;
+          background: rgba(99,179,237,0.07);
+          opacity: 0; transition: opacity 0.3s;
           clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
         }
         .nav-link-anchor:hover::before,
         .nav-link-anchor.is-active::before { opacity: 1; }
 
-        /* Nav-link underbar */
+        /* Nav link underbar */
         .link-bar {
           position: absolute;
           bottom: 0; left: 18px; right: 18px;
           height: 1px;
-          background: #C9A84C;
-          box-shadow: 0 0 6px rgba(201,168,76,0.5);
+          background: #63B3ED;
+          box-shadow: 0 0 6px rgba(99,179,237,0.6);
           transform: scaleX(0);
           transform-origin: left;
           transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
@@ -138,96 +128,143 @@ const Header = () => {
         /* CTA shimmer */
         .nav-cta-link { position: relative; overflow: hidden; }
         .nav-cta-link::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: white;
-          opacity: 0;
-          transition: opacity 0.3s;
+          content: ''; position: absolute; inset: 0;
+          background: white; opacity: 0; transition: opacity 0.3s;
         }
         .nav-cta-link:hover::before { opacity: 0.15; }
 
-        /* Mobile menu slide */
+        /* Mobile menu */
         .mobile-menu {
           overflow: hidden;
-          max-height: 0;
-          opacity: 0;
+          max-height: 0; opacity: 0;
           transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
         }
-        .mobile-menu.open { max-height: 400px; opacity: 1; }
+        .mobile-menu.open { max-height: 450px; opacity: 1; }
 
-        /* Mobile link arrow hover */
         .mobile-link:hover .mobile-arrow,
         .mobile-link.is-active .mobile-arrow {
-          color: #C9A84C;
+          color: #63B3ED;
           transform: translateX(4px);
         }
       `}</style>
 
       <nav
         ref={menuRef}
-        className="fixed top-1 left-2.5 right-2.5 z-9999 transition-all duration-500 font-rajdhani"
+        className="font-rajdhani"
+        style={{
+          position: "fixed",
+          top: "6px",
+          left: "10px",
+          right: "10px",
+          zIndex: 9999,
+          transition: "all 0.5s",
+        }}
       >
-        {/* Inner wrapper — glass blur when scrolled */}
         <div
-          className={[
-            "nav-inner relative px-8 transition-all duration-500",
+          className={`nav-inner relative px-6 md:px-8 transition-all duration-500 ${isScrolled ? "scrolled" : ""}`}
+          style={
             isScrolled
-              ? "scrolled bg-[rgba(2,2,5,0.75)] backdrop-blur-2xl border-b border-[rgba(201,168,76,0.18)] shadow-[0_4px_40px_rgba(0,0,0,0.6),0_0_60px_rgba(201,168,76,0.04)]"
-              : "bg-transparent",
-          ].join(" ")}
+              ? {
+                  background: "rgba(7,5,15,0.90)",
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  borderBottom: "1px solid rgba(99,179,237,0.18)",
+                  boxShadow:
+                    "0 4px 40px rgba(0,0,0,0.7), 0 0 60px rgba(99,179,237,0.06)",
+                }
+              : { background: "transparent" }
+          }
         >
-          {/* ── HUD micro bar ── */}
-          <div className="flex justify-between items-center py-1.25 border-b border-[rgba(201,168,76,0.07)] overflow-hidden">
-            <span className="font-rajdhani text-[9px] tracking-[0.28em] uppercase text-[rgba(201,168,76,0.35)]">
-              <span className="inline-block w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_6px_rgba(201,168,76,0.5)] animate-blink mr-2 align-middle" />
+          {/* HUD micro bar */}
+          <div
+            className="flex justify-between items-center py-1 overflow-hidden"
+            style={{ borderBottom: "1px solid rgba(99,179,237,0.08)" }}
+          >
+            <span
+              className="font-rajdhani text-[9px] tracking-[0.28em] uppercase flex items-center"
+              style={{ color: "rgba(99,179,237,0.4)" }}
+            >
+              <span
+                className="animate-blink inline-block w-1.5 h-1.5 rounded-full mr-2"
+                style={{
+                  background: "#63B3ED",
+                  boxShadow: "0 0 6px rgba(99,179,237,0.6)",
+                  flexShrink: 0,
+                }}
+              />
               Rithu Business Lanka
             </span>
-            <span className="font-rajdhani text-[9px] tracking-[0.28em] uppercase text-[rgba(201,168,76,0.35)]">
+            <span
+              className="font-rajdhani text-[9px] tracking-[0.28em] uppercase hidden sm:block"
+              style={{ color: "rgba(99,179,237,0.4)" }}
+            >
               {time}
             </span>
-            <span className="font-rajdhani text-[9px] tracking-[0.28em] uppercase text-[rgba(201,168,76,0.35)]">
+            <span
+              className="font-rajdhani text-[9px] tracking-[0.28em] uppercase flex items-center"
+              style={{ color: "rgba(99,179,237,0.4)" }}
+            >
               COLOMBO · LK
-              <span className="inline-block w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_6px_rgba(201,168,76,0.5)] animate-blink ml-2 align-middle" />
+              <span
+                className="animate-blink inline-block w-1.5 h-1.5 rounded-full ml-2"
+                style={{
+                  background: "#63B3ED",
+                  boxShadow: "0 0 6px rgba(99,179,237,0.6)",
+                  flexShrink: 0,
+                }}
+              />
             </span>
           </div>
 
-          {/* ── Main nav row ── */}
-          <div className="flex justify-between items-center py-3.5">
+          {/* Main nav row */}
+          <div className="flex justify-between items-center py-3">
             {/* Logo */}
             <Link
               href="/"
               className="rbl-logo relative flex flex-col leading-none no-underline"
+              style={{ textDecoration: "none" }}
             >
-              <span className="animate-gold-flow font-cinzel text-[22px] font-semibold tracking-[0.05em]">
-                Rithu Bussiness Lanka
+              <span
+                className="animate-blue-flow font-cinzel font-semibold tracking-[0.05em]"
+                style={{ fontSize: "clamp(16px, 2.5vw, 22px)" }}
+              >
+                Rithu Business Lanka
               </span>
-              <span className="font-rajdhani text-[9px] tracking-[0.35em] uppercase text-[rgba(201,168,76,0.45)] mt-0.5">
-                Business Lanka Marketing
+              <span
+                className="font-rajdhani text-[8px] tracking-[0.35em] uppercase mt-0.5"
+                style={{ color: "rgba(99,179,237,0.45)" }}
+              >
+                Digital Marketing Excellence
               </span>
               <span className="logo-accent" />
             </Link>
 
-            {/* Desktop links */}
-            <ul className="hidden md:flex items-center gap-1 list-none m-0 p-0">
+            {/* Desktop nav links */}
+            <ul className="hidden md:flex items-center gap-0.5 list-none m-0 p-0">
               {navItems.map((item, i) => {
                 const href = `#${item.toLowerCase().replace(" ", "-")}`;
                 const isActive = activeItem === item;
                 return (
-                  <li key={item} className="relative">
+                  <li key={item}>
                     <Link
                       href={href}
                       onClick={() => setActiveItem(item)}
-                      className={[
-                        "nav-link-anchor clip-nav-link relative inline-flex items-center gap-1.5 px-4.5 py-2",
-                        "font-rajdhani text-[12px] font-semibold tracking-[0.18em] uppercase no-underline",
-                        "transition-colors duration-300",
-                        isActive
-                          ? "is-active text-[#C9A84C] [text-shadow:0_0_12px_rgba(255,215,0,0.4)]"
-                          : "text-[rgba(255,255,255,0.45)] hover:text-[#C9A84C]",
-                      ].join(" ")}
+                      className={`nav-link-anchor clip-nav-link inline-flex items-center gap-1.5 px-4 py-2 font-rajdhani text-[12px] font-semibold tracking-[0.18em] uppercase no-underline transition-colors duration-300 ${isActive ? "is-active" : ""}`}
+                      style={{
+                        color: isActive ? "#63B3ED" : "rgba(255,255,255,0.45)",
+                        textShadow: isActive
+                          ? "0 0 12px rgba(99,179,237,0.5)"
+                          : "none",
+                        textDecoration: "none",
+                      }}
                     >
-                      <span className="text-[8px] text-[rgba(201,168,76,0.3)] font-normal align-super mr-0.5">
+                      <span
+                        className="text-[8px] font-normal"
+                        style={{
+                          color: "rgba(99,179,237,0.3)",
+                          verticalAlign: "super",
+                        }}
+                      >
                         0{i + 1}
                       </span>
                       {item}
@@ -238,63 +275,84 @@ const Header = () => {
               })}
             </ul>
 
-            {/* Right side: CTA + hamburger */}
-            <div className="flex items-center">
-              {/* CTA — desktop only */}
-              <div className="hidden md:inline-flex ml-4">
-                <Link
-                  href="#contact"
-                  className={[
-                    "nav-cta-link clip-cta inline-flex items-center gap-2 px-6 py-2.5",
-                    "bg-linear-to-br from-[#C9A84C] to-[#FFD700] text-black",
-                    "font-rajdhani text-[11px] font-bold tracking-[0.2em] uppercase no-underline",
-                    "shadow-[0_0_20px_rgba(255,215,0,0.2)]",
-                    "transition-all duration-300 hover:shadow-[0_0_35px_rgba(255,215,0,0.45)] hover:-translate-y-0.5",
-                  ].join(" ")}
-                >
-                  Get Started ›
-                </Link>
-              </div>
+            {/* Right: CTA + burger */}
+            <div className="flex items-center gap-3">
+              <Link
+                href="#contact"
+                className="nav-cta-link clip-cta hidden md:inline-flex items-center gap-2 px-6 py-2.5 font-rajdhani text-[11px] font-bold tracking-[0.2em] uppercase no-underline transition-all duration-300 hover:-translate-y-0.5"
+                style={{
+                  background: "linear-gradient(135deg, #2B6CB0, #63B3ED)",
+                  color: "#ffffff",
+                  boxShadow: "0 0 20px rgba(99,179,237,0.25)",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.boxShadow =
+                    "0 0 35px rgba(99,179,237,0.5)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.boxShadow =
+                    "0 0 20px rgba(99,179,237,0.25)")
+                }
+              >
+                Get Started ›
+              </Link>
 
-              {/* Hamburger — mobile only */}
+              {/* Hamburger */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Toggle menu"
-                className={[
-                  "clip-nav-btn flex md:hidden flex-col justify-center items-end gap-1.25",
-                  "w-9 h-9 bg-transparent border border-[rgba(201,168,76,0.2)] cursor-pointer px-2",
-                  "transition-colors duration-300 hover:border-[rgba(201,168,76,0.5)]",
-                ].join(" ")}
+                className="clip-nav-btn flex md:hidden flex-col justify-center items-end gap-1.5 w-9 h-9 bg-transparent cursor-pointer px-2 transition-all duration-300"
+                style={{ border: "1px solid rgba(99,179,237,0.25)" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.borderColor = "rgba(99,179,237,0.55)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.borderColor = "rgba(99,179,237,0.25)")
+                }
               >
                 <span
-                  className={[
-                    "block h-px bg-[#C9A84C] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                    isOpen ? "w-full translate-y-1.5 rotate-45" : "w-full",
-                  ].join(" ")}
+                  className="block h-px transition-all duration-300"
+                  style={{
+                    background: "#63B3ED",
+                    width: "100%",
+                    transform: isOpen
+                      ? "translateY(6px) rotate(45deg)"
+                      : "none",
+                  }}
                 />
                 <span
-                  className={[
-                    "block h-px bg-[#C9A84C] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                    isOpen ? "opacity-0 translate-x-2 w-[70%]" : "w-[70%]",
-                  ].join(" ")}
+                  className="block h-px transition-all duration-300"
+                  style={{
+                    background: "#63B3ED",
+                    width: "70%",
+                    opacity: isOpen ? 0 : 1,
+                  }}
                 />
                 <span
-                  className={[
-                    "block h-px bg-[#C9A84C] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                    isOpen ? "w-full -translate-y-1.5 -rotate-45" : "w-[50%]",
-                  ].join(" ")}
+                  className="block h-px transition-all duration-300"
+                  style={{
+                    background: "#63B3ED",
+                    width: isOpen ? "100%" : "50%",
+                    transform: isOpen
+                      ? "translateY(-6px) rotate(-45deg)"
+                      : "none",
+                  }}
                 />
               </button>
             </div>
           </div>
 
-          {/* ── Mobile menu ── */}
+          {/* Mobile dropdown */}
           <div
-            className={`mobile-menu absolute top-full left-0 right-0
-              bg-[rgba(2,2,5,0.97)] backdrop-blur-[30px]
-              border-b border-[rgba(201,168,76,0.15)]
-              border-t border-t-[rgba(201,168,76,0.08)]
-              ${isOpen ? "open" : ""}`}
+            className={`mobile-menu absolute top-full left-0 right-0 ${isOpen ? "open" : ""}`}
+            style={{
+              background: "rgba(7,5,15,0.97)",
+              backdropFilter: "blur(30px)",
+              WebkitBackdropFilter: "blur(30px)",
+              borderBottom: "1px solid rgba(99,179,237,0.15)",
+              borderTop: "1px solid rgba(99,179,237,0.08)",
+            }}
           >
             <div className="px-6 pt-4 pb-6">
               {navItems.map((item, i) => {
@@ -308,41 +366,53 @@ const Header = () => {
                       setActiveItem(item);
                       setIsOpen(false);
                     }}
-                    className={[
-                      "mobile-link flex items-center justify-between py-3.5",
-                      "border-b border-[rgba(201,168,76,0.06)]",
-                      "font-rajdhani text-[14px] font-semibold tracking-[0.2em] uppercase no-underline",
-                      "transition-all duration-300 hover:pl-2",
-                      isActive
-                        ? "is-active text-[#C9A84C] pl-2"
-                        : "text-[rgba(255,255,255,0.5)] hover:text-[#C9A84C]",
-                    ].join(" ")}
+                    className={`mobile-link flex items-center justify-between py-3.5 font-rajdhani text-[14px] font-semibold tracking-[0.2em] uppercase no-underline transition-all duration-300 hover:pl-2 ${isActive ? "is-active pl-2" : ""}`}
+                    style={{
+                      borderBottom: "1px solid rgba(99,179,237,0.07)",
+                      color: isActive ? "#63B3ED" : "rgba(255,255,255,0.5)",
+                      textDecoration: "none",
+                    }}
                   >
                     <span>
-                      <span className="text-[10px] text-[rgba(201,168,76,0.25)] font-normal">
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          color: "rgba(99,179,237,0.28)",
+                          fontWeight: 400,
+                        }}
+                      >
                         0{i + 1} ·{" "}
                       </span>
                       {item}
                     </span>
-                    <span className="mobile-arrow text-base text-[rgba(201,168,76,0.3)] transition-all duration-300">
+                    <span
+                      className="mobile-arrow text-base transition-all duration-300"
+                      style={{ color: "rgba(99,179,237,0.35)" }}
+                    >
                       ›
                     </span>
                   </Link>
                 );
               })}
-
-              {/* Mobile CTA */}
               <div className="pt-5">
                 <Link
                   href="#contact"
                   onClick={() => setIsOpen(false)}
-                  className={[
-                    "clip-cta flex justify-center items-center gap-2 p-3.5",
-                    "bg-linear-to-br from-[#C9A84C] to-[#FFD700] text-black",
-                    "font-rajdhani text-[12px] font-bold tracking-[0.2em] uppercase no-underline",
-                    "shadow-[0_0_24px_rgba(255,215,0,0.25)] transition-shadow duration-300",
-                    "hover:shadow-[0_0_40px_rgba(255,215,0,0.4)]",
-                  ].join(" ")}
+                  className="clip-cta flex justify-center items-center gap-2 p-3.5 font-rajdhani text-[12px] font-bold tracking-[0.2em] uppercase no-underline transition-shadow duration-300"
+                  style={{
+                    background: "linear-gradient(135deg, #2B6CB0, #63B3ED)",
+                    color: "#ffffff",
+                    boxShadow: "0 0 24px rgba(99,179,237,0.3)",
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.boxShadow =
+                      "0 0 40px rgba(99,179,237,0.5)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.boxShadow =
+                      "0 0 24px rgba(99,179,237,0.3)")
+                  }
                 >
                   Get Started ›
                 </Link>

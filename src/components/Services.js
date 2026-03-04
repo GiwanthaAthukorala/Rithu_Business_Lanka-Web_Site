@@ -94,19 +94,6 @@ const services = [
   },
 ];
 
-/*
-  Kept in <style> — genuinely not expressible in Tailwind:
-  • @import Google Fonts
-  • @keyframes (blobDrift1, blobDrift2, titleGoldFlow)
-  • ::before / ::after on .svc-eyebrow (decorative lines flanking label)
-  • background-clip: text / -webkit-text-fill-color (gold gradient title)
-  • clip-path: polygon() on cards, icon wrap, footer button
-  • repeating/layered background-image grid pattern
-  • filter: blur() on blob divs (Tailwind's blur applies to the element itself, not as a filter-blur on bg)
-  • .svc-card hover child selector (.svc-card:hover .card-corner)
-  • card-bottom-bar transform-origin + scaleX driven by JS inline style
-  • card-cta gap hover (gap transition not possible in Tailwind)
-*/
 const ServiceCard = ({ service, index }) => {
   const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -127,28 +114,42 @@ const ServiceCard = ({ service, index }) => {
   return (
     <div
       ref={cardRef}
-      className="svc-card relative border border-[rgba(201,168,76,0.15)] backdrop-blur-xl
-        overflow-hidden cursor-pointer
-        transition-[border-color,box-shadow,transform] duration-400
-        ease-[cubic-bezier(0.16,1,0.3,1)]
-        hover:border-[rgba(201,168,76,0.35)]
-        hover:shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_40px_rgba(201,168,76,0.08)]
-        hover:-translate-y-1.5
-        bg-[rgba(255,255,255,0.025)] px-6 pt-7 pb-8"
+      className="relative overflow-hidden cursor-pointer px-6 pt-7 pb-8"
       style={{
+        border: `1px solid ${hovered ? "rgba(99,179,237,0.38)" : "rgba(99,179,237,0.14)"}`,
+        backdropFilter: "blur(16px)",
+        background: "rgba(255,255,255,0.025)",
+        clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(32px)",
-        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 0.07}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 0.07}s`,
-        clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
+        boxShadow: hovered
+          ? "0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,179,237,0.1)"
+          : "none",
+        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 0.07}s,
+                     transform 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 0.07}s,
+                     border-color 0.4s, box-shadow 0.4s`,
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Corner HUD brackets */}
-      <span className="absolute top-1.5 left-1.5 w-3.5 h-3.5 pointer-events-none border-t border-l border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400 group-hover:border-[rgba(201,168,76,0.6)]" />
-      <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 pointer-events-none border-t border-r border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400" />
-      <span className="absolute bottom-1.5 left-1.5 w-3.5 h-3.5 pointer-events-none border-b border-l border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400" />
-      <span className="absolute bottom-1.5 right-1.5 w-3.5 h-3.5 pointer-events-none border-b border-r border-[rgba(201,168,76,0.25)] transition-[border-color] duration-400" />
+      {/* Corner HUD brackets — blue */}
+      {[
+        "top-1.5 left-1.5 border-t border-l",
+        "top-1.5 right-1.5 border-t border-r",
+        "bottom-1.5 left-1.5 border-b border-l",
+        "bottom-1.5 right-1.5 border-b border-r",
+      ].map((cls, i) => (
+        <span
+          key={i}
+          className={`absolute w-3.5 h-3.5 pointer-events-none ${cls}`}
+          style={{
+            borderColor: hovered
+              ? "rgba(99,179,237,0.5)"
+              : "rgba(99,179,237,0.22)",
+            transition: "border-color 0.4s",
+          }}
+        />
+      ))}
 
       {/* Hover glow */}
       <div
@@ -161,50 +162,61 @@ const ServiceCard = ({ service, index }) => {
 
       {/* Top row */}
       <div className="flex justify-between items-center mb-5">
-        <span className="font-rajdhani text-[10px] font-semibold tracking-[0.25em] text-[rgba(201,168,76,0.4)]">
+        <span
+          className="font-rajdhani text-[10px] font-semibold tracking-[0.25em]"
+          style={{ color: "rgba(99,179,237,0.45)" }}
+        >
           {service.tag}
         </span>
-        <span className="font-rajdhani text-[9px] font-medium tracking-[0.15em] text-[rgba(255,255,255,0.2)] uppercase">
+        <span
+          className="font-rajdhani text-[9px] font-medium tracking-[0.15em] uppercase"
+          style={{ color: "rgba(200,216,232,0.25)" }}
+        >
           {service.metric}
         </span>
       </div>
 
       {/* Icon */}
       <div
-        className="inline-flex items-center justify-center w-14.5 h-14.5
-          bg-[rgba(255,255,255,0.03)] border border-[rgba(201,168,76,0.12)]
-          rounded-sm mb-5 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="inline-flex items-center justify-center w-14 h-14 rounded-sm mb-5"
         style={{
+          background: "rgba(255,255,255,0.03)",
+          border: `1px solid ${hovered ? service.iconColor + "55" : "rgba(99,179,237,0.12)"}`,
           boxShadow: hovered
             ? `0 0 28px ${service.iconGlow}, 0 0 60px ${service.iconGlow}`
             : "none",
-          borderColor: hovered
-            ? service.iconColor + "55"
-            : "rgba(201,168,76,0.12)",
           transform: hovered ? "scale(1.1) translateY(-2px)" : "scale(1)",
           clipPath: "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
+          transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
         }}
       >
         <Icon style={{ color: service.iconColor, fontSize: 28 }} />
       </div>
 
       {/* Text */}
-      <h3 className="font-rajdhani text-[17px] font-bold tracking-[0.05em] text-[rgba(255,255,255,0.88)] uppercase m-0 mb-2.5">
+      <h3
+        className="font-rajdhani text-[17px] font-bold tracking-[0.05em] uppercase m-0 mb-2.5"
+        style={{ color: "rgba(255,255,255,0.88)" }}
+      >
         {service.title}
       </h3>
-      <p className="font-exo text-[13px] font-light text-[rgba(255,255,255,0.35)] leading-[1.7] m-0 mb-4.5">
+      <p
+        className="font-exo text-[13px] font-light leading-[1.7] m-0 mb-4.5"
+        style={{ color: "rgba(200,216,232,0.35)" }}
+      >
         {service.description}
       </p>
 
       {/* CTA */}
       <a
         href="#contact"
-        className="card-cta inline-flex items-center gap-2 font-rajdhani text-[11px] font-semibold
-          tracking-[0.2em] uppercase text-[#C9A84C] no-underline
-          transition-[opacity,transform,gap] duration-350"
+        className="inline-flex items-center gap-2 font-rajdhani text-[11px] font-semibold
+          tracking-[0.2em] uppercase no-underline"
         style={{
+          color: "#63B3ED",
           opacity: hovered ? 1 : 0,
           transform: hovered ? "translateY(0)" : "translateY(6px)",
+          transition: "opacity 0.35s, transform 0.35s, gap 0.35s",
         }}
       >
         Enquire Now
@@ -219,12 +231,15 @@ const ServiceCard = ({ service, index }) => {
         </svg>
       </a>
 
-      {/* Bottom gold bar */}
+      {/* Bottom blue bar */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-px
-          bg-[linear-gradient(90deg,transparent,#C9A84C,transparent)]
-          origin-left transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{ transform: hovered ? "scaleX(1)" : "scaleX(0)" }}
+        className="absolute bottom-0 left-0 right-0 h-px origin-left"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, #63B3ED, transparent)",
+          transform: hovered ? "scaleX(1)" : "scaleX(0)",
+          transition: "transform 0.5s cubic-bezier(0.16,1,0.3,1)",
+        }}
       />
     </div>
   );
@@ -262,52 +277,49 @@ const Services = () => {
           0%,100% { transform: translate(0,0); }
           50%      { transform: translate(-40px,-50px); }
         }
-        @keyframes titleGoldFlow {
+        @keyframes titleBlueFlow {
           0%   { background-position: 0%   center; }
           100% { background-position: 250% center; }
         }
 
-        /* Animated gradient title text */
-        .svc-title-gold {
-          background: linear-gradient(90deg, #C9A84C, #FFD700, #FFF3CC, #FFD700, #C9A84C);
+        /* Blue-silver animated gradient title */
+        .svc-title-blue {
+          background: linear-gradient(90deg, #2B6CB0, #63B3ED, #C8D8E8, #63B3ED, #2B6CB0);
           background-size: 250% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          animation: titleGoldFlow 5s linear infinite;
-          filter: drop-shadow(0 0 16px rgba(255,215,0,0.3));
+          animation: titleBlueFlow 5s linear infinite;
+          filter: drop-shadow(0 0 16px rgba(99,179,237,0.4));
         }
 
-        /* Eyebrow flanking lines via ::before / ::after */
+        /* Eyebrow flanking lines — blue */
         .svc-eyebrow::before, .svc-eyebrow::after {
           content: '';
           display: block;
           width: 40px; height: 1px;
-          background: linear-gradient(90deg, transparent, #C9A84C);
+          background: linear-gradient(90deg, transparent, #63B3ED);
         }
         .svc-eyebrow::after {
-          background: linear-gradient(90deg, #C9A84C, transparent);
+          background: linear-gradient(90deg, #63B3ED, transparent);
         }
 
-        /* Background grid — layered linear-gradients */
+        /* Background grid — blue tint */
         .svc-grid-bg {
           background-image:
-            linear-gradient(rgba(201,168,76,0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201,168,76,0.035) 1px, transparent 1px);
+            linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
           background-size: 60px 60px;
         }
 
-        /* Blob animations */
         .svc-blob-1 { animation: blobDrift1 14s ease-in-out infinite; }
         .svc-blob-2 { animation: blobDrift2 18s ease-in-out infinite; }
 
-        /* card-cta gap on hover */
-        .card-cta:hover { gap: 12px; }
-
-        /* Footer btn clip + hover */
+        /* Footer btn */
         .svc-footer-btn {
           clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
           background-size: 200% auto;
+          transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
         }
         .svc-footer-btn:hover {
           background-position: right center;
@@ -316,64 +328,101 @@ const Services = () => {
 
       <section
         id="services"
-        className="font-exo relative overflow-hidden py-30 pb-35
-          bg-[radial-gradient(ellipse_100%_80%_at_50%_0%,#0d0900_0%,#08080F_45%,#000008_100%)]"
+        className="font-exo relative overflow-hidden py-30 pb-35"
+        style={{
+          background:
+            "radial-gradient(ellipse 100% 80% at 50% 0%, #120820 0%, #0a0515 45%, #07050f 100%)",
+        }}
       >
         {/* Background grid */}
         <div className="svc-grid-bg absolute inset-0 pointer-events-none z-0" />
 
-        {/* Glow blobs */}
+        {/* Glow blobs — blue */}
         <div
-          className="svc-blob-1 absolute rounded-full pointer-events-none z-0
-            w-125 h-125 -top-30 -left-30
-            bg-[radial-gradient(circle,rgba(201,168,76,0.09)_0%,transparent_70%)]
-            blur-[100px]"
+          className="svc-blob-1 absolute rounded-full pointer-events-none z-0"
+          style={{
+            width: "500px",
+            height: "500px",
+            top: "-120px",
+            left: "-120px",
+            background:
+              "radial-gradient(circle, rgba(99,179,237,0.09) 0%, transparent 70%)",
+            filter: "blur(100px)",
+          }}
         />
         <div
-          className="svc-blob-2 absolute rounded-full pointer-events-none z-0
-            w-150 h-150 -bottom-37.5 -right-25
-            bg-[radial-gradient(circle,rgba(201,168,76,0.07)_0%,transparent_70%)]
-            blur-[100px]"
+          className="svc-blob-2 absolute rounded-full pointer-events-none z-0"
+          style={{
+            width: "600px",
+            height: "600px",
+            bottom: "-150px",
+            right: "-100px",
+            background:
+              "radial-gradient(circle, rgba(99,179,237,0.07) 0%, transparent 70%)",
+            filter: "blur(100px)",
+          }}
         />
 
         {/* ── Header ── */}
         <div ref={titleRef} className="relative z-10 text-center mb-20 px-6">
           {/* Eyebrow */}
           <div
-            className="svc-eyebrow inline-flex items-center gap-3
-            font-rajdhani text-[10px] font-medium tracking-[0.35em] uppercase
-            text-[rgba(201,168,76,0.55)] mb-5"
+            className="svc-eyebrow inline-flex items-center gap-3 font-rajdhani text-[10px] font-medium tracking-[0.35em] uppercase mb-5"
+            style={{ color: "rgba(99,179,237,0.55)" }}
           >
             What We Offer
           </div>
 
           {/* Title */}
           <h2
-            className={`font-cinzel text-[clamp(36px,6vw,68px)] font-bold leading-none
-              tracking-[-0.01em] text-[rgba(255,255,255,0.92)] m-0 mb-2
+            className={`font-cinzel font-bold leading-none tracking-[-0.01em] m-0 mb-2
               transition-[opacity,transform] duration-800 ease-[cubic-bezier(0.16,1,0.3,1)]
               ${titleVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+            style={{
+              fontSize: "clamp(36px, 6vw, 68px)",
+              color: "rgba(255,255,255,0.92)",
+            }}
           >
-            Our <span className="svc-title-gold">Services</span>
+            Our <span className="svc-title-blue">Services</span>
           </h2>
 
-          {/* Divider */}
+          {/* Divider — blue */}
           <div
             className={`flex items-center justify-center gap-3 mx-auto mt-7 max-w-75
               transition-opacity duration-800 delay-300
               ${titleVisible ? "opacity-100" : "opacity-0"}`}
           >
-            <div className="flex-1 h-px bg-[linear-gradient(90deg,transparent,#C9A84C)]" />
-            <div className="w-1.75 h-1.75 bg-[#C9A84C] rotate-45 shadow-[0_0_10px_rgba(201,168,76,0.5),0_0_20px_rgba(201,168,76,0.5)]" />
-            <div className="flex-1 h-px bg-[linear-gradient(90deg,#C9A84C,transparent)]" />
+            <div
+              className="flex-1 h-px"
+              style={{
+                background: "linear-gradient(90deg, transparent, #63B3ED)",
+              }}
+            />
+            <div
+              className="w-1.75 h-1.75 rotate-45"
+              style={{
+                background: "#63B3ED",
+                boxShadow:
+                  "0 0 10px rgba(99,179,237,0.6), 0 0 20px rgba(99,179,237,0.4)",
+              }}
+            />
+            <div
+              className="flex-1 h-px"
+              style={{
+                background: "linear-gradient(90deg, #63B3ED, transparent)",
+              }}
+            />
           </div>
 
           {/* Sub */}
           <p
-            className={`font-exo text-[clamp(14px,1.8vw,18px)] font-extralight
-              text-[rgba(255,255,255,0.35)] max-w-130 mx-auto mt-5 leading-[1.7]
+            className={`font-exo font-extralight max-w-130 mx-auto mt-5 leading-[1.7]
               transition-[opacity,transform] duration-800 delay-200 ease-[cubic-bezier(0.16,1,0.3,1)]
               ${titleVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            style={{
+              fontSize: "clamp(14px, 1.8vw, 18px)",
+              color: "rgba(200,216,232,0.35)",
+            }}
           >
             Comprehensive digital marketing solutions engineered for measurable
             growth across every platform.
@@ -381,10 +430,7 @@ const Services = () => {
         </div>
 
         {/* Cards grid */}
-        <div
-          className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5
-          max-w-7xl mx-auto px-6"
-        >
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-7xl mx-auto px-6">
           {services.map((service, index) => (
             <ServiceCard key={index} service={service} index={index} />
           ))}
@@ -393,19 +439,29 @@ const Services = () => {
         {/* Footer CTA */}
         <div className="relative z-10 text-center mt-16 px-6">
           <p
-            className="font-rajdhani text-[11px] tracking-[0.3em] uppercase
-            text-[rgba(201,168,76,0.35)] mb-5"
+            className="font-rajdhani text-[11px] tracking-[0.3em] uppercase mb-5"
+            style={{ color: "rgba(99,179,237,0.38)" }}
           >
             Ready to scale your brand?
           </p>
           <a
             href="#contact"
             className="svc-footer-btn inline-flex items-center gap-2.5 px-12 py-4
-              bg-[linear-gradient(135deg,#C9A84C,#FFD700,#C9A84C)] text-black
               font-rajdhani text-[13px] font-bold tracking-[0.2em] uppercase no-underline
-              shadow-[0_0_30px_rgba(255,215,0,0.25)]
-              transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
-              hover:shadow-[0_0_50px_rgba(255,215,0,0.45)] hover:-translate-y-0.75"
+              hover:-translate-y-0.75"
+            style={{
+              background: "linear-gradient(135deg, #2B6CB0, #63B3ED, #2B6CB0)",
+              color: "#ffffff",
+              boxShadow: "0 0 30px rgba(99,179,237,0.3)",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.boxShadow =
+                "0 0 50px rgba(99,179,237,0.55)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.boxShadow =
+                "0 0 30px rgba(99,179,237,0.3)")
+            }
           >
             Start Your Project ›
           </a>

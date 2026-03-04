@@ -54,48 +54,40 @@ const Contact = () => {
       label: "WhatsApp",
       value: "+94 74 008 9006",
       href: "https://api.whatsapp.com/send/?phone=94767400723&text&type=phone_number&app_absent=0",
-      iconColor: "text-[#25D366]",
-      iconBg: "bg-[#25D366]/10",
-      iconBorder: "border-[#25D366]/20",
-      iconGlow: "drop-shadow-[0_0_5px_rgba(37,211,102,0.5)]",
-      borderHover: "hover:border-[#25D366]/40",
-      textColor: "text-[#25D366]",
+      iconColor: "#25D366",
+      iconGlow: "rgba(37,211,102,0.5)",
+      borderColor: "rgba(37,211,102,0.2)",
+      borderHoverColor: "rgba(37,211,102,0.45)",
     },
     {
       icon: FaEnvelope,
       label: "Email",
       value: "info@rithusociol.com",
       href: "mailto:info@rithusociol.com",
-      iconColor: "text-[#C9A84C]",
-      iconBg: "bg-[#C9A84C]/10",
-      iconBorder: "border-[#C9A84C]/20",
-      iconGlow: "drop-shadow-[0_0_5px_rgba(201,168,76,0.5)]",
-      borderHover: "hover:border-[#C9A84C]/40",
-      textColor: "text-[#C9A84C]",
+      iconColor: "#63B3ED",
+      iconGlow: "rgba(99,179,237,0.5)",
+      borderColor: "rgba(99,179,237,0.2)",
+      borderHoverColor: "rgba(99,179,237,0.45)",
     },
     {
       icon: FaPhone,
       label: "Phone",
       value: "074 008 9006",
       href: "tel:+9474 008 9006",
-      iconColor: "text-[#69C9D0]",
-      iconBg: "bg-[#69C9D0]/10",
-      iconBorder: "border-[#69C9D0]/20",
-      iconGlow: "drop-shadow-[0_0_5px_rgba(105,201,208,0.5)]",
-      borderHover: "hover:border-[#69C9D0]/40",
-      textColor: "text-[#69C9D0]",
+      iconColor: "#69C9D0",
+      iconGlow: "rgba(105,201,208,0.5)",
+      borderColor: "rgba(105,201,208,0.2)",
+      borderHoverColor: "rgba(105,201,208,0.45)",
     },
     {
       icon: FaMapMarkerAlt,
       label: "Address",
-      value: "Mawanella, Sri Lanka, Sri Lanka",
+      value: "Mawanella, Sri Lanka",
       href: null,
-      iconColor: "text-[#E1306C]",
-      iconBg: "bg-[#E1306C]/10",
-      iconBorder: "border-[#E1306C]/20",
-      iconGlow: "drop-shadow-[0_0_5px_rgba(225,48,108,0.5)]",
-      borderHover: "hover:border-[#E1306C]/40",
-      textColor: "text-[#E1306C]",
+      iconColor: "#E1306C",
+      iconGlow: "rgba(225,48,108,0.5)",
+      borderColor: "rgba(225,48,108,0.2)",
+      borderHoverColor: "rgba(225,48,108,0.45)",
     },
   ];
 
@@ -110,12 +102,8 @@ const Contact = () => {
     "Post Design",
   ];
 
-  const inputClass =
-    "w-full px-4 py-3.5 bg-white/3 border border-[#C9A84C]/15 text-white/80 font-light text-sm outline-none transition-all duration-300 focus:border-[#C9A84C]/50 focus:bg-[#C9A84C]/4 focus:shadow-[0_0_20px_rgba(201,168,76,0.08)] placeholder:text-white/20 tracking-wide";
-
   return (
     <>
-      {/* Keyframe animations via a single global <style> tag — only for things Tailwind can't express */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Exo+2:wght@200;300;400;500&display=swap');
 
@@ -125,31 +113,34 @@ const Contact = () => {
 
         @keyframes ctGlow    { 0%,100%{opacity:.6} 50%{opacity:1} }
         @keyframes ctBlink   { 0%,100%{opacity:1} 50%{opacity:0.2} }
-        @keyframes ctGoldFlow{ 0%{background-position:0%} 100%{background-position:200%} }
+        @keyframes ctBlueFlow{ 0%{background-position:0%} 100%{background-position:200%} }
         @keyframes ctFadeIn  { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
         @keyframes spin      { to{transform:rotate(360deg)} }
         @keyframes waPulse   { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
 
-        .anim-glow     { animation: ctGlow 5s ease-in-out infinite; }
-        .anim-blink    { animation: ctBlink 2s ease-in-out infinite; }
-        .anim-gold     { animation: ctGoldFlow 4s linear infinite; background-size:200% auto; }
-        .anim-fadein   { animation: ctFadeIn .4s ease both; }
-        .anim-spin     { animation: spin .7s linear infinite; }
-        .anim-wapulse  { animation: waPulse 2s ease-in-out infinite; }
+        .anim-glow    { animation: ctGlow 5s ease-in-out infinite; }
+        .anim-blink   { animation: ctBlink 2s ease-in-out infinite; }
+        .anim-fadein  { animation: ctFadeIn .4s ease both; }
+        .anim-spin    { animation: spin .7s linear infinite; }
+        .anim-wapulse { animation: waPulse 2s ease-in-out infinite; }
 
-        .clip-btn      { clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%); }
-        .clip-input    { clip-path: polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); }
-        .clip-icon     { clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%); }
-        .clip-wa-btn   { clip-path: polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%); }
-
-        .gold-text {
-          background: linear-gradient(90deg,#C9A84C,#FFD700,#C9A84C);
+        /* Blue-silver animated gradient title */
+        .blue-text {
+          background: linear-gradient(90deg, #2B6CB0, #63B3ED, #C8D8E8, #63B3ED, #2B6CB0);
+          background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          filter: drop-shadow(0 0 16px rgba(255,215,0,0.3));
+          animation: ctBlueFlow 4s linear infinite;
+          filter: drop-shadow(0 0 16px rgba(99,179,237,0.45));
         }
 
+        .clip-btn    { clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%); }
+        .clip-input  { clip-path: polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); }
+        .clip-icon   { clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%); }
+        .clip-wa-btn { clip-path: polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%); }
+
+        /* Submit button shimmer */
         .submit-btn::before {
           content:''; position:absolute;
           top:-50%; left:-100%; width:60%; height:200%;
@@ -157,19 +148,40 @@ const Contact = () => {
           transition:left .6s;
         }
         .submit-btn:hover::before { left:160%; }
+
+        /* Info item left accent bar */
         .info-item::before {
           content:''; position:absolute; left:0; top:0; bottom:0;
           width:2px; background:currentColor; opacity:0; transition:opacity .3s;
         }
         .info-item:hover::before { opacity:.6; }
 
+        /* WhatsApp button inner glow */
         .wa-btn::before {
           content:''; position:absolute; inset:0;
           background:rgba(37,211,102,0.08); opacity:0; transition:opacity .3s;
         }
         .wa-btn:hover::before { opacity:1; }
 
-        .ct-layout-enter { opacity:0; transform:translateY(30px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
+        /* Form inputs — blue focus */
+        .ct-input {
+          width:100%; padding:14px 16px;
+          background:rgba(255,255,255,0.03);
+          border:1px solid rgba(99,179,237,0.15);
+          color:rgba(255,255,255,0.8);
+          font-weight:300; font-size:14px;
+          outline:none; transition:all .3s;
+          tracking:wide;
+        }
+        .ct-input::placeholder { color:rgba(255,255,255,0.2); }
+        .ct-input:focus {
+          border-color:rgba(99,179,237,0.5);
+          background:rgba(99,179,237,0.04);
+          box-shadow:0 0 20px rgba(99,179,237,0.08);
+        }
+        .ct-input option { background:#0a0515; color:rgba(255,255,255,0.8); }
+
+        .ct-layout-enter   { opacity:0; transform:translateY(30px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
         .ct-layout-visible { opacity:1; transform:translateY(0); }
 
         .scan-lines {
@@ -177,8 +189,8 @@ const Contact = () => {
         }
         .bg-grid {
           background-image:
-            linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+            linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
           background-size: 70px 70px;
         }
       `}</style>
@@ -189,11 +201,13 @@ const Contact = () => {
         className="font-exo relative py-28 overflow-hidden"
         style={{
           background:
-            "radial-gradient(ellipse 100% 50% at 50% 0%, #120d00 0%, #020205 40%, #000008 100%)",
+            "radial-gradient(ellipse 100% 50% at 50% 0%, #110820 0%, #080515 40%, #07050f 100%)",
         }}
       >
         {/* Background layers */}
         <div className="bg-grid absolute inset-0 pointer-events-none" />
+
+        {/* Top glow — blue */}
         <div
           className="anim-glow absolute pointer-events-none"
           style={{
@@ -203,7 +217,7 @@ const Contact = () => {
             width: 900,
             height: 500,
             background:
-              "radial-gradient(ellipse, rgba(201,168,76,0.09) 0%, transparent 65%)",
+              "radial-gradient(ellipse, rgba(99,179,237,0.09) 0%, transparent 65%)",
           }}
         />
         <div
@@ -213,13 +227,14 @@ const Contact = () => {
             right: -100,
             width: 500,
             height: 500,
+            borderRadius: "50%",
             background:
-              "radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 65%)",
+              "radial-gradient(circle, rgba(99,179,237,0.05) 0%, transparent 65%)",
           }}
         />
-        <div className="scan-lines absolute inset-0 pointer-events-none z-1" />
+        <div className="scan-lines absolute inset-0 pointer-events-none z-[1]" />
 
-        {/* Corner decorations */}
+        {/* Corner decorations — blue */}
         {[
           "top-6 left-6 border-t border-l",
           "top-6 right-6 border-t border-r",
@@ -228,25 +243,56 @@ const Contact = () => {
         ].map((cls, i) => (
           <div
             key={i}
-            className={`absolute w-12 h-12 border-[#C9A84C]/40 pointer-events-none z-5 ${cls}`}
+            className={`absolute w-12 h-12 pointer-events-none z-[5] ${cls}`}
+            style={{ borderColor: "rgba(99,179,237,0.4)" }}
           />
         ))}
 
         {/* Container */}
-        <div className="relative z-2 max-w-290 mx-auto px-6">
+        <div className="relative z-[2] max-w-6xl mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-18">
             <div className="flex justify-center mb-5">
-              <div className="font-rajdhani inline-flex items-center gap-2.5 text-[11px] font-medium tracking-[.3em] uppercase text-[#C9A84C] bg-[#C9A84C]/5 border border-[#C9A84C]/20 px-4.5 py-1.75">
-                <span className="anim-blink w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
+              <div
+                className="font-rajdhani inline-flex items-center gap-2.5 text-[11px]
+                  font-medium tracking-[.3em] uppercase px-4 py-1.75"
+                style={{
+                  color: "#63B3ED",
+                  background: "rgba(99,179,237,0.05)",
+                  border: "1px solid rgba(99,179,237,0.22)",
+                }}
+              >
+                <span
+                  className="anim-blink w-1.5 h-1.5 rounded-full inline-block"
+                  style={{
+                    background: "#63B3ED",
+                    boxShadow: "0 0 8px rgba(99,179,237,0.8)",
+                  }}
+                />
                 Let&apos;s Connect
-                <span className="anim-blink w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
+                <span
+                  className="anim-blink w-1.5 h-1.5 rounded-full inline-block"
+                  style={{
+                    background: "#63B3ED",
+                    boxShadow: "0 0 8px rgba(99,179,237,0.8)",
+                  }}
+                />
               </div>
             </div>
-            <h2 className="font-cinzel text-[clamp(34px,5vw,60px)] font-bold text-white/90 leading-[1.05] mb-4 tracking-tight">
-              Get In <span className="anim-gold gold-text">Touch</span>
+
+            <h2
+              className="font-cinzel font-bold leading-[1.05] mb-4 tracking-tight"
+              style={{
+                fontSize: "clamp(34px, 5vw, 60px)",
+                color: "rgba(255,255,255,0.9)",
+              }}
+            >
+              Get In <span className="blue-text">Touch</span>
             </h2>
-            <p className="font-exo text-base text-white/35 tracking-[.04em] font-light">
+            <p
+              className="font-exo text-base font-light tracking-[.04em]"
+              style={{ color: "rgba(200,216,232,0.35)" }}
+            >
               Ready to grow your business? Let&apos;s build something great
               together
             </p>
@@ -254,39 +300,40 @@ const Contact = () => {
 
           {/* Layout grid */}
           <div
-            className={`ct-layout-enter grid grid-cols-1 lg:grid-cols-2 gap-8 ${
-              visibleItems ? "ct-layout-visible" : ""
-            }`}
+            className={`ct-layout-enter grid grid-cols-1 lg:grid-cols-2 gap-8 ${visibleItems ? "ct-layout-visible" : ""}`}
           >
             {/* LEFT — Form */}
             <div
               className="relative overflow-hidden backdrop-blur-2xl"
               style={{
-                background: "rgba(8,8,15,0.75)",
-                border: "1px solid rgba(201,168,76,0.12)",
+                background: "rgba(7,5,18,0.78)",
+                border: "1px solid rgba(99,179,237,0.12)",
               }}
             >
-              {/* top shimmer line */}
+              {/* Top shimmer line — blue */}
               <div
                 className="absolute top-0 left-0 right-0 h-px"
                 style={{
                   background:
-                    "linear-gradient(90deg,transparent,rgba(201,168,76,0.45),transparent)",
+                    "linear-gradient(90deg,transparent,rgba(99,179,237,0.45),transparent)",
                 }}
               />
               <div className="p-10">
-                <div className="font-cinzel flex items-center gap-3 text-xl font-semibold text-white/85 tracking-[.05em] mb-8">
+                <div
+                  className="font-cinzel flex items-center gap-3 text-xl font-semibold tracking-[.05em] mb-8"
+                  style={{ color: "rgba(255,255,255,0.85)" }}
+                >
                   Send a Message
                   <div
                     className="flex-1 h-px"
                     style={{
                       background:
-                        "linear-gradient(90deg,rgba(201,168,76,0.3),transparent)",
+                        "linear-gradient(90deg,rgba(99,179,237,0.3),transparent)",
                     }}
                   />
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4.5">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   {[
                     {
                       name: "name",
@@ -312,7 +359,8 @@ const Contact = () => {
                         onChange={handleChange}
                         placeholder={f.placeholder}
                         required={f.name !== "phone"}
-                        className={`clip-input ${inputClass}`}
+                        className="ct-input clip-input"
+                        style={{ letterSpacing: "0.03em" }}
                       />
                     </div>
                   ))}
@@ -322,22 +370,19 @@ const Contact = () => {
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
-                      className={`clip-input ${inputClass} appearance-none cursor-pointer`}
+                      className="ct-input clip-input appearance-none cursor-pointer"
                       style={{
                         backgroundImage:
-                          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none'/%3E%3C/svg%3E\")",
+                          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2363B3ED' stroke-width='1.5' fill='none'/%3E%3C/svg%3E\")",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "right 18px center",
                       }}
                     >
-                      <option value="" className="bg-[#08080F] text-white/80">
-                        Select a Service
-                      </option>
+                      <option value="">Select a Service</option>
                       {services.map((s) => (
                         <option
                           key={s}
                           value={s.toLowerCase().replace(/ /g, "-")}
-                          className="bg-[#08080F] text-white/80"
                         >
                           {s}
                         </option>
@@ -353,24 +398,44 @@ const Contact = () => {
                       placeholder="Tell us about your project..."
                       required
                       rows={4}
-                      className={`clip-input ${inputClass} resize-none min-h-27.5`}
+                      className="ct-input clip-input resize-none"
+                      style={{ minHeight: "110px", letterSpacing: "0.03em" }}
                     />
                   </div>
 
+                  {/* Submit button — blue */}
                   <button
                     type="submit"
                     disabled={sending}
-                    className="submit-btn clip-btn relative overflow-hidden w-full py-4 font-rajdhani font-bold text-sm tracking-[.2em] uppercase text-black border-none cursor-pointer flex items-center justify-center gap-2.5 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
+                    className="submit-btn clip-btn relative overflow-hidden w-full py-4
+                      font-rajdhani font-bold text-sm tracking-[.2em] uppercase
+                      text-white border-none cursor-pointer flex items-center justify-center gap-2.5
+                      transition-all duration-300 hover:-translate-y-0.5
+                      disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
                     style={{
                       background:
-                        "linear-gradient(135deg,#C9A84C,#FFD700,#C9A84C)",
+                        "linear-gradient(135deg, #2B6CB0, #63B3ED, #2B6CB0)",
                       backgroundSize: "200% auto",
-                      boxShadow: "0 0 25px rgba(255,215,0,0.2)",
+                      boxShadow: "0 0 25px rgba(99,179,237,0.25)",
                     }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.boxShadow =
+                        "0 0 40px rgba(99,179,237,0.45)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.boxShadow =
+                        "0 0 25px rgba(99,179,237,0.25)")
+                    }
                   >
                     {sending ? (
                       <>
-                        <span className="anim-spin w-4 h-4 rounded-full border-2 border-black/20 border-t-black" />
+                        <span
+                          className="anim-spin w-4 h-4 rounded-full border-2"
+                          style={{
+                            borderColor: "rgba(255,255,255,0.2)",
+                            borderTopColor: "#ffffff",
+                          }}
+                        />
                         Transmitting...
                       </>
                     ) : (
@@ -382,7 +447,15 @@ const Contact = () => {
                   </button>
 
                   {submitted && (
-                    <div className="anim-fadein flex items-center gap-3 bg-[#25D366]/8 border border-[#25D366]/30 px-5 py-3.5 text-[#25D366] font-rajdhani text-[13px] font-semibold tracking-widest">
+                    <div
+                      className="anim-fadein flex items-center gap-3 px-5 py-3.5
+                        font-rajdhani text-[13px] font-semibold tracking-widest"
+                      style={{
+                        background: "rgba(37,211,102,0.08)",
+                        border: "1px solid rgba(37,211,102,0.3)",
+                        color: "#25D366",
+                      }}
+                    >
                       <FaCheckCircle size={16} />
                       Message received! We&apos;ll respond within 24 hours.
                     </div>
@@ -397,47 +470,77 @@ const Contact = () => {
               <div
                 className="relative overflow-hidden backdrop-blur-2xl"
                 style={{
-                  background: "rgba(8,8,15,0.75)",
-                  border: "1px solid rgba(201,168,76,0.12)",
+                  background: "rgba(7,5,18,0.78)",
+                  border: "1px solid rgba(99,179,237,0.12)",
                 }}
               >
                 <div
                   className="absolute top-0 left-0 right-0 h-px"
                   style={{
                     background:
-                      "linear-gradient(90deg,transparent,rgba(201,168,76,0.45),transparent)",
+                      "linear-gradient(90deg,transparent,rgba(99,179,237,0.45),transparent)",
                   }}
                 />
                 <div className="p-8 pb-6">
-                  <div className="font-cinzel flex items-center gap-3 text-xl font-semibold text-white/85 tracking-[.05em] mb-8">
+                  <div
+                    className="font-cinzel flex items-center gap-3 text-xl font-semibold tracking-[.05em] mb-8"
+                    style={{ color: "rgba(255,255,255,0.85)" }}
+                  >
                     Contact Info
                     <div
                       className="flex-1 h-px"
                       style={{
                         background:
-                          "linear-gradient(90deg,rgba(201,168,76,0.3),transparent)",
+                          "linear-gradient(90deg,rgba(99,179,237,0.3),transparent)",
                       }}
                     />
                   </div>
+
                   <div className="flex flex-col gap-3">
                     {contacts.map((c) => (
                       <div
                         key={c.label}
-                        className={`info-item relative flex items-start gap-4 px-6 py-5 bg-white/2 border border-[#C9A84C]/10 ${c.borderHover} transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:translate-x-1 cursor-default ${c.textColor}`}
+                        className="info-item relative flex items-start gap-4 px-6 py-5 cursor-default
+                          transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:translate-x-1"
+                        style={{
+                          background: "rgba(255,255,255,0.02)",
+                          border: `1px solid ${c.borderColor}`,
+                          color: c.iconColor,
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.borderColor =
+                            c.borderHoverColor)
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.borderColor = c.borderColor)
+                        }
                       >
                         <div
-                          className={`clip-icon w-10 h-10 shrink-0 flex items-center justify-center ${c.iconBg} border ${c.iconBorder}`}
+                          className="clip-icon w-10 h-10 shrink-0 flex items-center justify-center"
+                          style={{
+                            background: `${c.iconColor}18`,
+                            border: `1px solid ${c.borderColor}`,
+                          }}
                         >
                           <c.icon
                             size={16}
-                            className={`${c.iconColor} ${c.iconGlow}`}
+                            style={{
+                              color: c.iconColor,
+                              filter: `drop-shadow(0 0 5px ${c.iconGlow})`,
+                            }}
                           />
                         </div>
                         <div>
-                          <div className="font-rajdhani text-[10px] font-semibold tracking-[.25em] uppercase text-white/25 mb-1">
+                          <div
+                            className="font-rajdhani text-[10px] font-semibold tracking-[.25em] uppercase mb-1"
+                            style={{ color: "rgba(255,255,255,0.25)" }}
+                          >
                             {c.label}
                           </div>
-                          <div className="font-exo text-sm text-white/70 font-light tracking-[.02em] leading-relaxed transition-colors duration-300 group-hover:text-white/90">
+                          <div
+                            className="font-exo text-sm font-light tracking-[.02em] leading-relaxed"
+                            style={{ color: "rgba(200,216,232,0.7)" }}
+                          >
                             {c.href ? (
                               <a
                                 href={c.href}
@@ -447,7 +550,16 @@ const Contact = () => {
                                     : undefined
                                 }
                                 rel="noopener noreferrer"
-                                className="text-inherit no-underline hover:text-white/90 transition-colors duration-300"
+                                className="no-underline transition-colors duration-300"
+                                style={{ color: "inherit" }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.color =
+                                    "rgba(255,255,255,0.9)")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.color =
+                                    "rgba(200,216,232,0.7)")
+                                }
                               >
                                 {c.value}
                               </a>
@@ -462,17 +574,16 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* WhatsApp CTA */}
+              {/* WhatsApp CTA — kept green, it's a brand color */}
               <div
                 className="relative overflow-hidden p-8"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(10,30,15,0.9) 0%, rgba(5,20,10,0.95) 100%)",
+                    "linear-gradient(135deg, rgba(10,30,15,0.9) 0%, rgba(5,18,10,0.95) 100%)",
                   border: "1px solid rgba(37,211,102,0.25)",
                   boxShadow: "0 0 40px rgba(37,211,102,0.06)",
                 }}
               >
-                {/* top shimmer */}
                 <div
                   className="absolute top-0 left-0 right-0 h-px"
                   style={{
@@ -480,7 +591,6 @@ const Contact = () => {
                       "linear-gradient(90deg,transparent,rgba(37,211,102,0.5),transparent)",
                   }}
                 />
-                {/* glow orb */}
                 <div
                   className="absolute pointer-events-none"
                   style={{
@@ -495,24 +605,56 @@ const Contact = () => {
                 />
 
                 <div className="flex items-center gap-2.5 mb-3">
-                  <span className="anim-wapulse w-2 h-2 rounded-full bg-[#25D366] shadow-[0_0_8px_rgba(37,211,102,0.8)]" />
-                  <span className="font-rajdhani text-[10px] tracking-[.25em] uppercase text-[#25D366]/60">
+                  <span
+                    className="anim-wapulse w-2 h-2 rounded-full inline-block"
+                    style={{
+                      background: "#25D366",
+                      boxShadow: "0 0 8px rgba(37,211,102,0.8)",
+                    }}
+                  />
+                  <span
+                    className="font-rajdhani text-[10px] tracking-[.25em] uppercase"
+                    style={{ color: "rgba(37,211,102,0.6)" }}
+                  >
                     Available Now
                   </span>
                 </div>
 
-                <h3 className="font-cinzel text-lg font-semibold text-white/90 mb-2.5 tracking-[.03em]">
+                <h3
+                  className="font-cinzel text-lg font-semibold mb-2.5 tracking-[.03em]"
+                  style={{ color: "rgba(255,255,255,0.9)" }}
+                >
                   Quick Chat on WhatsApp
                 </h3>
-                <p className="font-exo text-[13px] text-white/35 font-light mb-6 leading-relaxed tracking-[.03em]">
+                <p
+                  className="font-exo text-[13px] font-light mb-6 leading-relaxed tracking-[.03em]"
+                  style={{ color: "rgba(200,216,232,0.35)" }}
+                >
                   Get instant responses from our team — usually within minutes.
                 </p>
 
                 <a
-                  href="https://wa.me/94771234567"
+                  href="https://api.whatsapp.com/send/?phone=94767400723&text&type=phone_number&app_absent=0"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="wa-btn clip-wa-btn relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#25D366]/12 border border-[#25D366]/40 text-[#25D366] font-rajdhani text-[13px] font-bold tracking-[.18em] uppercase no-underline transition-all duration-300 hover:border-[#25D366]/70 hover:shadow-[0_0_30px_rgba(37,211,102,0.25)] hover:-translate-y-0.5"
+                  className="wa-btn clip-wa-btn relative overflow-hidden inline-flex items-center
+                    gap-2.5 px-8 py-3.5 font-rajdhani text-[13px] font-bold tracking-[.18em]
+                    uppercase no-underline transition-all duration-300
+                    hover:-translate-y-0.5"
+                  style={{
+                    background: "rgba(37,211,102,0.12)",
+                    border: "1px solid rgba(37,211,102,0.4)",
+                    color: "#25D366",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(37,211,102,0.7)";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 30px rgba(37,211,102,0.25)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(37,211,102,0.4)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
                 >
                   <FaWhatsapp size={15} />
                   Start WhatsApp Chat

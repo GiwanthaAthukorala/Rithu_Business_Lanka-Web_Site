@@ -10,23 +10,6 @@ import {
 } from "react-icons/fa";
 import Image from "next/image";
 
-/*
-  Kept in <style> — genuinely not expressible in Tailwind:
-  • @import Google Fonts
-  • @keyframes (glowPulse, blink, goldFlow, cardReveal)
-  • ::before / ::after pseudo-elements:
-      – .fb-stat top-line reveal on hover
-      – .fb-card top scan-line + inner glow
-      – .fb-cta-btn shimmer sweep + background-position
-      – .fb-stat inner gradient overlay
-  • background-clip: text / -webkit-text-fill-color (gold title)
-  • clip-path: polygon() (stats, platform badge, pagination, cta, screenshot btn)
-  • repeating-linear-gradient scanline overlay
-  • layered background-image grid pattern
-  • .fb-screenshot hover child selectors (.fb-screenshot-inner, .fb-screenshot-label, .fb-screenshot-overlay)
-  • filter: drop-shadow() on stars
-*/
-
 const platformConfig = {
   Facebook: {
     color: "#1877F2",
@@ -166,45 +149,56 @@ const stats = [
 /* ── Image Modal ── */
 const ImageModal = ({ image, onClose }) => {
   if (!image) return null;
-  const corners = [
-    { pos: "top-0 left-0", border: "border-t border-l" },
-    { pos: "top-0 right-0", border: "border-t border-r" },
-    { pos: "bottom-0 left-0", border: "border-b border-l" },
-    { pos: "bottom-0 right-0", border: "border-b border-r" },
-  ];
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4
-        bg-[rgba(0,0,0,0.95)] backdrop-blur-xl"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.95)", backdropFilter: "blur(20px)" }}
       onClick={onClose}
     >
       <div
-        className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden
-          bg-[rgba(8,8,15,0.9)] border border-[rgba(201,168,76,0.3)]
-          shadow-[0_0_60px_rgba(201,168,76,0.2)]"
+        className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden"
+        style={{
+          background: "rgba(7,5,15,0.9)",
+          border: "1px solid rgba(99,179,237,0.3)",
+          boxShadow: "0 0 60px rgba(99,179,237,0.18)",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* HUD corners */}
-        {corners.map(({ pos, border }, i) => (
+        {/* HUD corners — blue */}
+        {[
+          "top-0 left-0 border-t border-l",
+          "top-0 right-0 border-t border-r",
+          "bottom-0 left-0 border-b border-l",
+          "bottom-0 right-0 border-b border-r",
+        ].map((cls, i) => (
           <div
             key={i}
-            className={`absolute w-5 h-5 z-10 ${pos} ${border} border-[#C9A84C]`}
+            className={`absolute w-5 h-5 z-10 ${cls}`}
+            style={{ borderColor: "#63B3ED" }}
           />
         ))}
 
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-20 flex items-center justify-center
-            p-2 cursor-pointer text-[#C9A84C]
-            bg-[rgba(201,168,76,0.15)] border border-[rgba(201,168,76,0.4)]
-            transition-all duration-300
-            hover:bg-[rgba(201,168,76,0.3)]"
+          className="absolute top-3 right-3 z-20 flex items-center justify-center p-2 cursor-pointer
+            transition-all duration-300"
+          style={{
+            color: "#63B3ED",
+            background: "rgba(99,179,237,0.12)",
+            border: "1px solid rgba(99,179,237,0.4)",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "rgba(99,179,237,0.25)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "rgba(99,179,237,0.12)")
+          }
         >
           <FaTimes size={16} />
         </button>
 
-        <div className="relative w-full min-h-125">
+        <div className="relative w-full min-h-[500px]">
           <Image
             src={image}
             alt="Customer feedback screenshot"
@@ -240,7 +234,6 @@ const Feedback = () => {
         .font-cinzel   { font-family: 'Cinzel', serif; }
         .font-exo      { font-family: 'Exo 2', sans-serif; }
 
-        /* Keyframes */
         @keyframes glowPulse {
           0%,100% { opacity: 0.6; }
           50%      { opacity: 1; }
@@ -249,7 +242,7 @@ const Feedback = () => {
           0%,100% { opacity: 1;   }
           50%      { opacity: 0.2; }
         }
-        @keyframes goldFlow {
+        @keyframes blueFlow {
           0%   { background-position: 0%; }
           100% { background-position: 200%; }
         }
@@ -258,28 +251,25 @@ const Feedback = () => {
           to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* Glow pulse */
         .fb-glow-top { animation: glowPulse 5s ease-in-out infinite; }
+        .fb-dot      { animation: blink 2s ease-in-out infinite; }
 
-        /* Dot blink */
-        .fb-dot { animation: blink 2s ease-in-out infinite; }
-
-        /* Gold gradient text */
-        .fb-title-gold {
-          background: linear-gradient(90deg, #C9A84C, #FFD700, #C9A84C);
+        /* Blue-silver animated gradient title */
+        .fb-title-blue {
+          background: linear-gradient(90deg, #2B6CB0, #63B3ED, #C8D8E8, #63B3ED, #2B6CB0);
           background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          animation: goldFlow 4s linear infinite;
-          filter: drop-shadow(0 0 16px rgba(255,215,0,0.3));
+          animation: blueFlow 4s linear infinite;
+          filter: drop-shadow(0 0 16px rgba(99,179,237,0.45));
         }
 
-        /* Background grid */
+        /* Background grid — blue tint */
         .fb-grid-bg {
           background-image:
-            linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+            linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
           background-size: 70px 70px;
         }
 
@@ -291,7 +281,7 @@ const Feedback = () => {
           );
         }
 
-        /* Stat card: clip + ::before overlay + ::after bottom line */
+        /* Stat card — blue */
         .fb-stat {
           clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
           position: relative;
@@ -300,7 +290,7 @@ const Feedback = () => {
         .fb-stat::before {
           content: '';
           position: absolute; inset: 0;
-          background: linear-gradient(135deg, rgba(201,168,76,0.07) 0%, transparent 60%);
+          background: linear-gradient(135deg, rgba(99,179,237,0.08) 0%, transparent 60%);
           opacity: 0;
           transition: opacity 0.3s;
         }
@@ -310,13 +300,13 @@ const Feedback = () => {
           position: absolute;
           bottom: 0; left: 10%; right: 10%;
           height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+          background: linear-gradient(90deg, transparent, rgba(99,179,237,0.55), transparent);
           transform: scaleX(0);
           transition: transform 0.4s;
         }
         .fb-stat:hover::after { transform: scaleX(1); }
 
-        /* Feedback card: card reveal + top line + inner glow */
+        /* Feedback card — blue */
         .fb-card {
           animation: cardReveal 0.6s cubic-bezier(0.16,1,0.3,1) both;
         }
@@ -325,7 +315,7 @@ const Feedback = () => {
           position: absolute;
           top: 0; left: 0; right: 0;
           height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+          background: linear-gradient(90deg, transparent, rgba(99,179,237,0.55), transparent);
           transform: scaleX(0);
           transition: transform 0.5s;
         }
@@ -333,23 +323,26 @@ const Feedback = () => {
         .fb-card::after {
           content: '';
           position: absolute; inset: 0;
-          background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(201,168,76,0.04), transparent);
+          background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(99,179,237,0.05), transparent);
           opacity: 0;
           transition: opacity 0.4s;
           pointer-events: none;
         }
         .fb-card:hover::after { opacity: 1; }
 
-        /* Screenshot section child hover selectors */
-        .fb-screenshot:hover .fb-screenshot-inner { background: rgba(201,168,76,0.05); }
-        .fb-screenshot:hover .fb-screenshot-label { color: rgba(201,168,76,0.7); }
+        /* Screenshot hover child selectors */
+        .fb-screenshot:hover .fb-screenshot-inner { background: rgba(99,179,237,0.05); }
+        .fb-screenshot:hover .fb-screenshot-label { color: rgba(99,179,237,0.75); }
         .fb-screenshot:hover .fb-screenshot-overlay { opacity: 1; }
 
-        /* Platform badge + screenshot btn + pagination clip */
-        .fb-platform   { clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
-        .fb-scr-btn    { clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
-        .fb-page-btn   { clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
-        .fb-cta-btn    { clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%); background-size: 200% auto; }
+        /* Clip paths */
+        .fb-platform { clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
+        .fb-scr-btn  { clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
+        .fb-page-btn { clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
+        .fb-cta-btn  {
+          clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
+          background-size: 200% auto;
+        }
 
         /* CTA shimmer sweep */
         .fb-cta-btn::before {
@@ -364,29 +357,36 @@ const Feedback = () => {
         .fb-cta-btn:hover::before { left: 160%; }
         .fb-cta-btn:hover { background-position: right center; }
 
-        /* Star glow */
-        .fb-star-filled { color: #FFD700; filter: drop-shadow(0 0 4px rgba(255,215,0,0.6)); }
+        /* Stars */
+        .fb-star-filled { color: #63B3ED; filter: drop-shadow(0 0 4px rgba(99,179,237,0.7)); }
         .fb-star-empty  { color: rgba(255,255,255,0.12); }
       `}</style>
 
       <section
         id="feedback"
         ref={sectionRef}
-        className="font-exo relative overflow-hidden py-30
-          bg-[radial-gradient(ellipse_100%_50%_at_50%_0%,#120d00_0%,#020205_40%,#000008_100%)]"
+        className="font-exo relative overflow-hidden py-30"
+        style={{
+          background:
+            "radial-gradient(ellipse 100% 50% at 50% 0%, #110820 0%, #080515 40%, #07050f 100%)",
+        }}
       >
         {/* Background grid */}
         <div className="fb-grid-bg absolute inset-0 pointer-events-none z-0" />
 
-        {/* Top glow */}
+        {/* Top glow — blue */}
         <div
-          className="fb-glow-top absolute -top-37.5 left-1/2 -translate-x-1/2 pointer-events-none
-            w-200 h-100
-            bg-[radial-gradient(ellipse,rgba(201,168,76,0.1)_0%,transparent_65%)]"
+          className="fb-glow-top absolute -top-[150px] left-1/2 -translate-x-1/2 pointer-events-none"
+          style={{
+            width: "800px",
+            height: "400px",
+            background:
+              "radial-gradient(ellipse, rgba(99,179,237,0.1) 0%, transparent 65%)",
+          }}
         />
 
         {/* CRT scanlines */}
-        <div className="fb-scan absolute inset-0 pointer-events-none z-1" />
+        <div className="fb-scan absolute inset-0 pointer-events-none z-[1]" />
 
         <ImageModal
           image={selectedImage}
@@ -394,51 +394,89 @@ const Feedback = () => {
         />
 
         {/* Inner container */}
-        <div className="relative z-2 max-w-300 mx-auto px-6">
-          {/* ── Header ── */}
-          <div className="text-center mb-17.5">
+        <div className="relative z-[2] max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-[70px]">
             <div className="flex justify-center mb-5">
               <div
-                className="fb-platform inline-flex items-center gap-2.5
-                font-rajdhani text-[11px] font-medium tracking-[0.3em] uppercase text-[#C9A84C]
-                bg-[rgba(201,168,76,0.05)] border border-[rgba(201,168,76,0.2)] px-4.5 py-1.75"
+                className="fb-platform inline-flex items-center gap-2.5 font-rajdhani
+                  text-[11px] font-medium tracking-[0.3em] uppercase px-4 py-1.75"
+                style={{
+                  color: "#63B3ED",
+                  background: "rgba(99,179,237,0.05)",
+                  border: "1px solid rgba(99,179,237,0.22)",
+                }}
               >
-                <div className="fb-dot w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
+                <div
+                  className="fb-dot w-1.5 h-1.5 rounded-full"
+                  style={{
+                    background: "#63B3ED",
+                    boxShadow: "0 0 8px rgba(99,179,237,0.8)",
+                  }}
+                />
                 Client Testimonials
-                <div className="fb-dot w-1.25 h-1.25 rounded-full bg-[#C9A84C] shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
+                <div
+                  className="fb-dot w-1.5 h-1.5 rounded-full"
+                  style={{
+                    background: "#63B3ED",
+                    boxShadow: "0 0 8px rgba(99,179,237,0.8)",
+                  }}
+                />
               </div>
             </div>
+
             <h2
-              className="font-cinzel text-[clamp(36px,5.5vw,62px)] font-bold
-              text-[rgba(255,255,255,0.92)] leading-[1.05] mb-4 tracking-[-0.01em]"
+              className="font-cinzel font-bold leading-[1.05] mb-4 tracking-[-0.01em]"
+              style={{
+                fontSize: "clamp(36px, 5.5vw, 62px)",
+                color: "rgba(255,255,255,0.92)",
+              }}
             >
-              What Our <span className="fb-title-gold">Clients Say</span>
+              What Our <span className="fb-title-blue">Clients Say</span>
             </h2>
-            <p className="font-exo text-[16px] font-light text-[rgba(255,255,255,0.35)] tracking-[0.04em]">
+            <p
+              className="font-exo text-[16px] font-light tracking-[0.04em]"
+              style={{ color: "rgba(200,216,232,0.35)" }}
+            >
               Real results from real businesses across Sri Lanka
             </p>
           </div>
 
-          {/* ── Stats ── */}
+          {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
             {stats.map((s) => (
               <div
                 key={s.label}
-                className="fb-stat bg-[rgba(255,255,255,0.02)] border border-[rgba(201,168,76,0.15)]
-                  px-4 py-6 text-center
+                className="fb-stat px-4 py-6 text-center cursor-default
                   transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
-                  hover:border-[rgba(201,168,76,0.45)] hover:shadow-[0_0_30px_rgba(201,168,76,0.12)]
                   hover:-translate-y-1"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(99,179,237,0.15)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(99,179,237,0.45)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 30px rgba(99,179,237,0.12)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(99,179,237,0.15)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
               >
                 <div
-                  className="font-rajdhani text-[36px] font-bold text-[#FFD700] leading-none
-                  [text-shadow:0_0_20px_rgba(255,215,0,0.4)]"
+                  className="font-rajdhani font-bold leading-none"
+                  style={{
+                    fontSize: "36px",
+                    color: "#63B3ED",
+                    textShadow: "0 0 20px rgba(99,179,237,0.5)",
+                  }}
                 >
                   {s.num}
                 </div>
                 <div
-                  className="font-rajdhani text-[11px] tracking-[0.18em] uppercase
-                  text-[rgba(255,255,255,0.3)] mt-1.5"
+                  className="font-rajdhani text-[11px] tracking-[0.18em] uppercase mt-1.5"
+                  style={{ color: "rgba(200,216,232,0.3)" }}
                 >
                   {s.label}
                 </div>
@@ -446,53 +484,68 @@ const Feedback = () => {
             ))}
           </div>
 
-          {/* ── Cards ── */}
+          {/* Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
             {currentTestimonials.map((fb, index) => {
               const pc = platformConfig[fb.platform] || {
-                color: "#C9A84C",
-                glow: "rgba(201,168,76,0.3)",
-                bg: "rgba(201,168,76,0.08)",
-                border: "rgba(201,168,76,0.25)",
+                color: "#63B3ED",
+                glow: "rgba(99,179,237,0.3)",
+                bg: "rgba(99,179,237,0.08)",
+                border: "rgba(99,179,237,0.25)",
               };
               return (
                 <div
                   key={fb.id}
-                  className="fb-card relative bg-[rgba(8,8,15,0.7)] border border-[rgba(201,168,76,0.12)]
-                    backdrop-blur-xl overflow-hidden
+                  className="fb-card relative backdrop-blur-xl overflow-hidden
                     transition-[border-color,box-shadow,transform] duration-450
-                    ease-[cubic-bezier(0.16,1,0.3,1)]
-                    hover:border-[rgba(201,168,76,0.35)]
-                    hover:shadow-[0_0_40px_rgba(201,168,76,0.08),0_20px_60px_rgba(0,0,0,0.5)]
-                    hover:-translate-y-1.5"
-                  style={{ animationDelay: `${index * 0.08}s` }}
+                    ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1.5"
+                  style={{
+                    background: "rgba(8,6,18,0.75)",
+                    border: "1px solid rgba(99,179,237,0.12)",
+                    animationDelay: `${index * 0.08}s`,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(99,179,237,0.35)";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 40px rgba(99,179,237,0.08), 0 20px 60px rgba(0,0,0,0.5)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(99,179,237,0.12)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
                 >
                   <div className="p-6">
                     {/* Avatar + name */}
                     <div className="flex items-center gap-3.5 mb-4.5">
                       <div
-                        className="w-11.5 h-11.5 rounded-sm flex items-center justify-center
-                        font-cinzel text-[18px] font-bold text-[#020205] shrink-0
-                        bg-[linear-gradient(135deg,#C9A84C,#FFD700)]
-                        shadow-[0_0_16px_rgba(201,168,76,0.3)]"
+                        className="w-11 h-11 rounded-sm flex items-center justify-center
+                          font-cinzel text-[18px] font-bold text-white shrink-0"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #2B6CB0, #63B3ED)",
+                          boxShadow: "0 0 16px rgba(99,179,237,0.35)",
+                        }}
                       >
                         {fb.name.charAt(0)}
                       </div>
                       <div>
                         <div
-                          className="font-rajdhani text-[16px] font-semibold
-                          text-[rgba(255,255,255,0.9)] tracking-[0.05em] leading-[1.2]"
+                          className="font-rajdhani text-[16px] font-semibold tracking-[0.05em] leading-[1.2]"
+                          style={{ color: "rgba(255,255,255,0.9)" }}
                         >
                           {fb.name}
                         </div>
-                        <div className="font-exo text-[12px] text-[rgba(255,255,255,0.3)] tracking-[0.08em]">
+                        <div
+                          className="font-exo text-[12px] tracking-[0.08em]"
+                          style={{ color: "rgba(200,216,232,0.3)" }}
+                        >
                           {fb.company}
                         </div>
                       </div>
                     </div>
 
                     {/* Stars + date */}
-                    <div className="flex items-center gap-0.75 mb-3.5">
+                    <div className="flex items-center gap-1 mb-3.5">
                       {[...Array(5)].map((_, i) => (
                         <FaStar
                           key={i}
@@ -503,18 +556,18 @@ const Feedback = () => {
                         />
                       ))}
                       <span
-                        className="font-rajdhani text-[10px] text-[rgba(255,255,255,0.2)]
-                        tracking-[0.15em] ml-2"
+                        className="font-rajdhani text-[10px] tracking-[0.15em] ml-2"
+                        style={{ color: "rgba(200,216,232,0.22)" }}
                       >
                         {fb.date}
                       </span>
                     </div>
 
-                    {/* Platform badge */}
+                    {/* Platform badge — keeps brand color */}
                     <div
                       className="fb-platform inline-flex items-center gap-1.5
                         font-rajdhani text-[10px] font-semibold tracking-[0.2em] uppercase
-                        px-3 py-1.25 mb-4"
+                        px-3 py-1 mb-4"
                       style={{
                         color: pc.color,
                         background: pc.bg,
@@ -523,7 +576,7 @@ const Feedback = () => {
                       }}
                     >
                       <div
-                        className="w-1.25 h-1.25 rounded-full"
+                        className="w-1.5 h-1.5 rounded-full"
                         style={{
                           background: pc.color,
                           boxShadow: `0 0 6px ${pc.glow}`,
@@ -534,43 +587,52 @@ const Feedback = () => {
 
                     {/* Quote */}
                     <p
-                      className="font-exo relative text-[13.5px] leading-[1.7]
-                      text-[rgba(255,255,255,0.5)] italic font-light mb-4.5 pl-5"
+                      className="font-exo relative text-[13.5px] leading-[1.7] italic font-light mb-4.5 pl-5"
+                      style={{ color: "rgba(200,216,232,0.5)" }}
                     >
-                      <FaQuoteLeft className="absolute top-0.5 left-0 text-[rgba(201,168,76,0.3)] text-[14px]" />
+                      <FaQuoteLeft
+                        className="absolute top-0.5 left-0 text-[14px]"
+                        style={{ color: "rgba(99,179,237,0.35)" }}
+                      />
                       {fb.comment}
                     </p>
                   </div>
 
                   {/* Screenshot */}
                   <div
-                    className="fb-screenshot relative h-27.5 overflow-hidden cursor-pointer
-                      border-t border-[rgba(201,168,76,0.08)]"
+                    className="fb-screenshot relative h-[110px] overflow-hidden cursor-pointer"
+                    style={{ borderTop: "1px solid rgba(99,179,237,0.08)" }}
                     onClick={() => setSelectedImage(fb.screenshot)}
                   >
                     <div
                       className="fb-screenshot-inner w-full h-full flex items-center justify-center
-                      bg-[rgba(0,0,0,0.3)] transition-[background] duration-300"
+                        transition-[background] duration-300"
+                      style={{ background: "rgba(0,0,0,0.3)" }}
                     >
                       <div className="text-center">
                         <div className="text-[28px] mb-1.5">📸</div>
                         <div
                           className="fb-screenshot-label font-rajdhani text-[10px] tracking-[0.2em]
-                          uppercase text-[rgba(255,255,255,0.25)] transition-[color] duration-300"
+                            uppercase transition-[color] duration-300"
+                          style={{ color: "rgba(255,255,255,0.25)" }}
                         >
                           View Screenshot
                         </div>
                       </div>
                     </div>
                     <div
-                      className="fb-screenshot-overlay absolute inset-0 flex items-center justify-center
-                      opacity-0 transition-opacity duration-300 bg-[rgba(0,0,0,0.4)]"
+                      className="fb-screenshot-overlay absolute inset-0 flex items-center
+                        justify-center opacity-0 transition-opacity duration-300"
+                      style={{ background: "rgba(0,0,0,0.4)" }}
                     >
                       <div
-                        className="fb-scr-btn flex items-center gap-1.75
-                        font-rajdhani text-[11px] font-semibold tracking-[0.15em] uppercase
-                        text-[#FFD700] bg-[rgba(0,0,0,0.6)] border border-[rgba(201,168,76,0.4)]
-                        px-4.5 py-2"
+                        className="fb-scr-btn flex items-center gap-1.75 font-rajdhani
+                          text-[11px] font-semibold tracking-[0.15em] uppercase px-4 py-2"
+                        style={{
+                          color: "#63B3ED",
+                          background: "rgba(0,0,0,0.6)",
+                          border: "1px solid rgba(99,179,237,0.45)",
+                        }}
                       >
                         <FaExpand size={10} />
                         View Full Size
@@ -582,17 +644,28 @@ const Feedback = () => {
             })}
           </div>
 
-          {/* ── Pagination ── */}
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mb-16">
               <button
                 className="fb-page-btn w-10 h-10 flex items-center justify-center
                   font-rajdhani text-[13px] font-semibold tracking-widest
-                  bg-transparent border border-[rgba(201,168,76,0.2)] text-[rgba(255,255,255,0.4)]
-                  cursor-pointer transition-all duration-300
-                  hover:border-[rgba(201,168,76,0.5)] hover:text-[#C9A84C]
-                  hover:bg-[rgba(201,168,76,0.06)] hover:shadow-[0_0_16px_rgba(201,168,76,0.1)]
-                  disabled:opacity-25 disabled:cursor-not-allowed"
+                  cursor-pointer transition-all duration-300 disabled:opacity-25 disabled:cursor-not-allowed"
+                style={{
+                  background: "transparent",
+                  border: "1px solid rgba(99,179,237,0.2)",
+                  color: "rgba(255,255,255,0.4)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(99,179,237,0.5)";
+                  e.currentTarget.style.color = "#63B3ED";
+                  e.currentTarget.style.background = "rgba(99,179,237,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(99,179,237,0.2)";
+                  e.currentTarget.style.color = "rgba(255,255,255,0.4)";
+                  e.currentTarget.style.background = "transparent";
+                }}
                 onClick={() => setCurrentPage((p) => p - 1)}
                 disabled={currentPage === 1}
               >
@@ -603,14 +676,41 @@ const Feedback = () => {
                 <button
                   key={i}
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`fb-page-btn w-10 h-10 flex items-center justify-center
+                  className="fb-page-btn w-10 h-10 flex items-center justify-center
                     font-rajdhani text-[13px] font-semibold tracking-widest
-                    cursor-pointer transition-all duration-300
-                    ${
-                      currentPage === i + 1
-                        ? "bg-[linear-gradient(135deg,#C9A84C,#FFD700)] border border-[#FFD700] text-black shadow-[0_0_20px_rgba(255,215,0,0.35)]"
-                        : "bg-transparent border border-[rgba(201,168,76,0.2)] text-[rgba(255,255,255,0.4)] hover:border-[rgba(201,168,76,0.5)] hover:text-[#C9A84C] hover:bg-[rgba(201,168,76,0.06)]"
-                    }`}
+                    cursor-pointer transition-all duration-300"
+                  style={
+                    currentPage === i + 1
+                      ? {
+                          background:
+                            "linear-gradient(135deg, #2B6CB0, #63B3ED)",
+                          border: "1px solid #63B3ED",
+                          color: "#ffffff",
+                          boxShadow: "0 0 20px rgba(99,179,237,0.4)",
+                        }
+                      : {
+                          background: "transparent",
+                          border: "1px solid rgba(99,179,237,0.2)",
+                          color: "rgba(255,255,255,0.4)",
+                        }
+                  }
+                  onMouseEnter={(e) => {
+                    if (currentPage !== i + 1) {
+                      e.currentTarget.style.borderColor =
+                        "rgba(99,179,237,0.5)";
+                      e.currentTarget.style.color = "#63B3ED";
+                      e.currentTarget.style.background =
+                        "rgba(99,179,237,0.06)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentPage !== i + 1) {
+                      e.currentTarget.style.borderColor =
+                        "rgba(99,179,237,0.2)";
+                      e.currentTarget.style.color = "rgba(255,255,255,0.4)";
+                      e.currentTarget.style.background = "transparent";
+                    }
+                  }}
                 >
                   {i + 1}
                 </button>
@@ -619,11 +719,22 @@ const Feedback = () => {
               <button
                 className="fb-page-btn w-10 h-10 flex items-center justify-center
                   font-rajdhani text-[13px] font-semibold tracking-widest
-                  bg-transparent border border-[rgba(201,168,76,0.2)] text-[rgba(255,255,255,0.4)]
-                  cursor-pointer transition-all duration-300
-                  hover:border-[rgba(201,168,76,0.5)] hover:text-[#C9A84C]
-                  hover:bg-[rgba(201,168,76,0.06)] hover:shadow-[0_0_16px_rgba(201,168,76,0.1)]
-                  disabled:opacity-25 disabled:cursor-not-allowed"
+                  cursor-pointer transition-all duration-300 disabled:opacity-25 disabled:cursor-not-allowed"
+                style={{
+                  background: "transparent",
+                  border: "1px solid rgba(99,179,237,0.2)",
+                  color: "rgba(255,255,255,0.4)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(99,179,237,0.5)";
+                  e.currentTarget.style.color = "#63B3ED";
+                  e.currentTarget.style.background = "rgba(99,179,237,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(99,179,237,0.2)";
+                  e.currentTarget.style.color = "rgba(255,255,255,0.4)";
+                  e.currentTarget.style.background = "transparent";
+                }}
                 onClick={() => setCurrentPage((p) => p + 1)}
                 disabled={currentPage === totalPages}
               >
@@ -632,18 +743,36 @@ const Feedback = () => {
             </div>
           )}
 
-          {/* ── CTA ── */}
+          {/* CTA */}
           <div className="text-center relative">
-            <div className="h-px bg-[linear-gradient(90deg,transparent,rgba(201,168,76,0.3),transparent)] mb-12" />
+            <div
+              className="h-px mb-12"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, rgba(99,179,237,0.3), transparent)",
+              }}
+            />
             <a
               href="#contact"
-              className="fb-cta-btn relative inline-flex items-center gap-3 px-13 py-4.5
-                bg-[linear-gradient(135deg,#C9A84C,#FFD700,#C9A84C)] text-black
+              className="fb-cta-btn relative inline-flex items-center gap-3 px-[52px] py-[18px]
                 font-rajdhani text-[14px] font-bold tracking-[0.2em] uppercase no-underline overflow-hidden
-                shadow-[0_0_30px_rgba(255,215,0,0.25),0_0_60px_rgba(201,168,76,0.1)]
                 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
-                hover:shadow-[0_0_50px_rgba(255,215,0,0.4),0_0_80px_rgba(201,168,76,0.2)]
                 hover:-translate-y-0.75 hover:scale-[1.02]"
+              style={{
+                background:
+                  "linear-gradient(135deg, #2B6CB0, #63B3ED, #2B6CB0)",
+                color: "#ffffff",
+                boxShadow:
+                  "0 0 30px rgba(99,179,237,0.3), 0 0 60px rgba(99,179,237,0.12)",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  "0 0 50px rgba(99,179,237,0.5), 0 0 80px rgba(99,179,237,0.22)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  "0 0 30px rgba(99,179,237,0.3), 0 0 60px rgba(99,179,237,0.12)")
+              }
             >
               Join Our Happy Clients
               <span className="text-base">›</span>
