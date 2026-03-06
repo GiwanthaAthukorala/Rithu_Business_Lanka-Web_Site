@@ -416,18 +416,18 @@ const Hero = () => {
             with <Image> from next/image — fixes the ESLint no-img-element warning.
             Sizes: change width/height values below to resize the logo.
           */}
-          <div className="anim-logo flex justify-center mb-5">
+          <div className="anim-logo flex justify-center mb-1">
             <div className="hero-logo-wrap">
               <div
                 className="relative"
-                style={{ width: "420px", height: "100px" }}
+                style={{ width: "420px", height: "240px" }}
               >
                 <Image
                   src="/RBL.png"
                   alt="Rithu Business Lanka Logo"
                   fill
                   priority
-                  sizes="(max-width: 840px) 150px, (max-width: 1024px) 150px, 180px"
+                  sizes="(max-width: 1240px) 240px, (max-width: 1024px) 540px, 280px"
                   style={{ objectFit: "contain", objectPosition: "center" }}
                 />
               </div>
