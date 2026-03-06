@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 const Hero = () => {
   const canvasRef = useRef(null);
@@ -177,6 +178,7 @@ const Hero = () => {
           animation: shimmer 3s ease-in-out infinite 1s;
         }
 
+        .anim-logo    { animation: slideDown 0.8s cubic-bezier(0.16,1,0.3,1) 0.28s both; }
         .anim-title-1 { animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.35s both; }
         .anim-title-2 { animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
         .anim-title-3 { animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.55s both; }
@@ -241,6 +243,20 @@ const Hero = () => {
             rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
           );
         }
+
+        /* Glow ring around hero logo */
+        .hero-logo-wrap {
+          position: relative;
+          display: inline-block;
+        }
+        .hero-logo-wrap::after {
+          content: '';
+          position: absolute;
+          inset: -6px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(99,179,237,0.18) 0%, transparent 70%);
+          pointer-events: none;
+        }
       `}</style>
 
       <section
@@ -249,11 +265,10 @@ const Hero = () => {
         style={{
           background:
             "radial-gradient(ellipse 80% 60% at 50% 0%, #1a0d2e 0%, #0f0820 50%, #07050f 100%)",
-          /* paddingTop pushes content below the fixed header (~88px tall) */
           paddingTop: "88px",
         }}
       >
-        {/* Particle canvas — fills the full section behind everything */}
+        {/* Particle canvas */}
         <canvas
           ref={canvasRef}
           className="absolute inset-0 opacity-70"
@@ -307,23 +322,20 @@ const Hero = () => {
 
         {/* Corner HUD brackets */}
         {[
-          { cls: "top-8 left-8", border: "borderTop borderLeft" },
-          { cls: "top-8 right-8", border: "borderTop borderRight" },
-          { cls: "bottom-8 left-8", border: "borderBottom borderLeft" },
-          { cls: "bottom-8 right-8", border: "borderBottom borderRight" },
-        ].map(({ cls }, i) => (
+          { cls: "top-8 left-8", bt: true, bb: false, bl: true, br: false },
+          { cls: "top-8 right-8", bt: true, bb: false, bl: false, br: true },
+          { cls: "bottom-8 left-8", bt: false, bb: true, bl: true, br: false },
+          { cls: "bottom-8 right-8", bt: false, bb: true, bl: false, br: true },
+        ].map(({ cls, bt, bb, bl, br }, i) => (
           <div
             key={i}
             className={`hidden md:block absolute w-14 h-14 pointer-events-none ${cls}`}
             style={{
               zIndex: 10,
-              borderTop: i < 2 ? "1px solid rgba(99,179,237,0.55)" : undefined,
-              borderBottom:
-                i >= 2 ? "1px solid rgba(99,179,237,0.55)" : undefined,
-              borderLeft:
-                i % 2 === 0 ? "1px solid rgba(99,179,237,0.55)" : undefined,
-              borderRight:
-                i % 2 === 1 ? "1px solid rgba(99,179,237,0.55)" : undefined,
+              borderTop: bt ? "1px solid rgba(99,179,237,0.55)" : undefined,
+              borderBottom: bb ? "1px solid rgba(99,179,237,0.55)" : undefined,
+              borderLeft: bl ? "1px solid rgba(99,179,237,0.55)" : undefined,
+              borderRight: br ? "1px solid rgba(99,179,237,0.55)" : undefined,
             }}
           />
         ))}
@@ -356,8 +368,7 @@ const Hero = () => {
 
         {/* ── Main content ── */}
         <div
-          className={`relative text-center px-6 md:px-12 w-full transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
-            ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+          className={`relative text-center px-6 md:px-12 w-full transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
           style={{ zIndex: 15, maxWidth: "1000px", margin: "0 auto" }}
         >
           {/* Eyebrow tag */}
@@ -373,7 +384,7 @@ const Hero = () => {
               letterSpacing: "0.3em",
               textTransform: "uppercase",
               color: "#63B3ED",
-              marginBottom: "32px",
+              marginBottom: "24px",
               display: "inline-flex",
             }}
           >
@@ -400,6 +411,29 @@ const Hero = () => {
             />
           </div>
 
+          {/*
+            FIX: Logo moved OUT of <h1> (invalid HTML) and <img> replaced
+            with <Image> from next/image — fixes the ESLint no-img-element warning.
+            Sizes: change width/height values below to resize the logo.
+          */}
+          <div className="anim-logo flex justify-center mb-5">
+            <div className="hero-logo-wrap">
+              <div
+                className="relative"
+                style={{ width: "420px", height: "100px" }}
+              >
+                <Image
+                  src="/RBL.png"
+                  alt="Rithu Business Lanka Logo"
+                  fill
+                  priority
+                  sizes="(max-width: 840px) 150px, (max-width: 1024px) 150px, 180px"
+                  style={{ objectFit: "contain", objectPosition: "center" }}
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Main title */}
           <h1
             className="font-cinzel font-black leading-[0.95] mb-2"
@@ -408,7 +442,6 @@ const Hero = () => {
               letterSpacing: "-0.01em",
             }}
           >
-            <span className="anim-title-2 blue-text-flow block">RBL</span>
             <span
               className="anim-title-1 block"
               style={{

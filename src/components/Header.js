@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,7 +74,7 @@ const Header = () => {
         .clip-nav-link { clip-path: polygon(8px  0%, 100% 0%, calc(100% - 8px)  100%, 0% 100%); }
         .clip-cta      { clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%); }
 
-        /* Scrolled scan-line */
+        /* Bottom scan-line when scrolled */
         .nav-inner::after {
           content: '';
           position: absolute;
@@ -85,7 +86,7 @@ const Header = () => {
         }
         .nav-inner.scrolled::after { opacity: 1; }
 
-        /* Logo underline */
+        /* Logo underline on hover */
         .logo-accent {
           position: absolute;
           bottom: -4px; left: 0;
@@ -97,10 +98,8 @@ const Header = () => {
         }
         .rbl-logo:hover .logo-accent { transform: scaleX(1); }
 
-        /* Nav link bg fill */
-        .nav-link-anchor {
-          position: relative;
-        }
+        /* Nav link hover/active bg */
+        .nav-link-anchor { position: relative; }
         .nav-link-anchor::before {
           content: '';
           position: absolute; inset: 0;
@@ -133,7 +132,7 @@ const Header = () => {
         }
         .nav-cta-link:hover::before { opacity: 0.15; }
 
-        /* Mobile menu */
+        /* Mobile menu slide */
         .mobile-menu {
           overflow: hidden;
           max-height: 0; opacity: 0;
@@ -175,7 +174,7 @@ const Header = () => {
               : { background: "transparent" }
           }
         >
-          {/* HUD micro bar */}
+          {/* ── HUD micro bar ── */}
           <div
             className="flex justify-between items-center py-1 overflow-hidden"
             style={{ borderBottom: "1px solid rgba(99,179,237,0.08)" }}
@@ -216,22 +215,43 @@ const Header = () => {
             </span>
           </div>
 
-          {/* Main nav row */}
-          <div className="flex justify-between items-center py-3">
-            {/* Logo */}
+          {/* ── Main nav row ── */}
+          <div className="flex justify-between items-center py-2">
+            {/* Logo — uses next/image instead of <img> to fix ESLint warning */}
             <Link
               href="/"
-              className="rbl-logo relative flex flex-col leading-none no-underline"
+              className="rbl-logo relative flex flex-col items-start leading-none no-underline"
               style={{ textDecoration: "none" }}
             >
-              <span
-                className="animate-blue-flow font-cinzel font-semibold tracking-[0.05em]"
-                style={{ fontSize: "clamp(16px, 2.5vw, 22px)" }}
+              {/*
+                FIX: Replaced <img src="/RBL.png"> with <Image> from next/image.
+                - `fill` prop lets the image fill its parent container
+                - Parent div controls the rendered size
+                - `priority` loads the logo eagerly (good for LCP)
+                - `sizes` helps Next.js pick the right resolution
+              */}
+              <div
+                className="relative"
+                style={{
+                  width: "clamp(90px, 12vw, 150px)",
+                  height: "clamp(32px, 4.5vw, 52px)",
+                }}
               >
-                Rithu Business Lanka
-              </span>
+                <Image
+                  src="/RBL.png"
+                  alt="Rithu Business Lanka"
+                  fill
+                  priority
+                  sizes="(max-width: 640px) 90px, (max-width: 1024px) 120px, 150px"
+                  style={{
+                    objectFit: "contain",
+                    objectPosition: "left center",
+                  }}
+                />
+              </div>
+
               <span
-                className="font-rajdhani text-[8px] tracking-[0.35em] uppercase mt-0.5"
+                className="font-rajdhani text-[8px] tracking-[0.35em] uppercase mt-1"
                 style={{ color: "rgba(99,179,237,0.45)" }}
               >
                 Digital Marketing Excellence
@@ -275,8 +295,9 @@ const Header = () => {
               })}
             </ul>
 
-            {/* Right: CTA + burger */}
+            {/* Right: CTA + hamburger */}
             <div className="flex items-center gap-3">
+              {/* Desktop CTA */}
               <Link
                 href="#contact"
                 className="nav-cta-link clip-cta hidden md:inline-flex items-center gap-2 px-6 py-2.5 font-rajdhani text-[11px] font-bold tracking-[0.2em] uppercase no-underline transition-all duration-300 hover:-translate-y-0.5"
@@ -298,7 +319,7 @@ const Header = () => {
                 Get Started ›
               </Link>
 
-              {/* Hamburger */}
+              {/* Hamburger — mobile only */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Toggle menu"
@@ -343,7 +364,7 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Mobile dropdown */}
+          {/* ── Mobile dropdown menu ── */}
           <div
             className={`mobile-menu absolute top-full left-0 right-0 ${isOpen ? "open" : ""}`}
             style={{
@@ -394,6 +415,8 @@ const Header = () => {
                   </Link>
                 );
               })}
+
+              {/* Mobile CTA */}
               <div className="pt-5">
                 <Link
                   href="#contact"
