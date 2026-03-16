@@ -222,7 +222,7 @@ const SocialMedia = () => {
       {/* Notification toast */}
       {showNotification && (
         <div
-          className="sm-toast fixed top-6 right-6 z-[9999] flex items-center gap-3
+          className="sm-toast fixed top-6 right-6 z-50 flex items-center gap-3
             backdrop-blur-2xl px-6 py-3.5"
           style={{
             background: "rgba(7,5,15,0.95)",
@@ -305,13 +305,13 @@ const SocialMedia = () => {
         ].map((cls, i) => (
           <div
             key={i}
-            className={`hidden sm:block absolute w-10 h-10 pointer-events-none z-[5] ${cls}`}
+            className={`hidden sm:block absolute w-10 h-10 pointer-events-none z-10 ${cls}`}
             style={{ borderColor: "rgba(99,179,237,0.4)" }}
           />
         ))}
 
         {/* Inner container */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
+        <div className="relative z-20 max-w-7xl mx-auto px-6">
           {/* Header */}
           <div
             className={`text-center mb-18 transition-[opacity,transform] duration-800
@@ -409,8 +409,8 @@ const SocialMedia = () => {
 
                 {/* Icon ring — platform color kept */}
                 <div
-                  className="sm-icon-ring w-[70px] h-[70px] rounded-full flex items-center
-                    justify-center mx-auto mb-5 text-[30px] text-white relative z-[2]
+                  className="sm-icon-ring w-20 h-20 rounded-full flex items-center
+                    justify-center mx-auto mb-5 text-[30px] text-white relative z-20
                     transition-[transform,box-shadow] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   style={{
                     background: p.gradient,
@@ -424,7 +424,7 @@ const SocialMedia = () => {
                 {/* Name */}
                 <div
                   className="font-rajdhani text-[22px] font-bold tracking-widest uppercase
-                    text-center mb-2 relative z-[2]"
+                    text-center mb-2 relative z-20"
                   style={{ color: "rgba(255,255,255,0.9)" }}
                 >
                   {p.name}
@@ -432,7 +432,7 @@ const SocialMedia = () => {
 
                 {/* Desc */}
                 <div
-                  className="font-exo text-[13px] text-center leading-[1.6] mb-6 relative z-[2]"
+                  className="font-exo text-[13px] text-center leading-[1.6] mb-6 relative z-20"
                   style={{ color: "rgba(200,216,232,0.32)" }}
                 >
                   {p.desc}
@@ -443,7 +443,7 @@ const SocialMedia = () => {
                   <button
                     className="sm-connect-btn done relative flex items-center justify-center
                       gap-2 w-full py-3 px-5 font-rajdhani text-[12px] font-semibold
-                      tracking-[0.2em] uppercase border-none cursor-default z-[2]"
+                      tracking-[0.2em] uppercase border-none cursor-default z-20"
                     style={{
                       background: "rgba(37,211,102,0.08)",
                       color: "#25D366",
@@ -457,7 +457,7 @@ const SocialMedia = () => {
                   <button
                     className="sm-connect-btn idle relative flex items-center justify-center
                       gap-2 w-full py-3 px-5 font-rajdhani text-[12px] font-semibold
-                      tracking-[0.2em] uppercase border-none cursor-pointer z-[2] overflow-hidden
+                      tracking-[0.2em] uppercase border-none cursor-pointer z-20 overflow-hidden
                       transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
                     style={{
                       background: "rgba(99,179,237,0.07)",

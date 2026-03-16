@@ -40,80 +40,80 @@ const platformConfig = {
 const feedbacks = [
   {
     id: 1,
-    name: "Mohamed Rizvi",
+    name: "Akash Rajapaksha",
     company: "Rizvi Electronics",
     rating: 5,
     comment:
       "Excellent service! Their Facebook boosting strategy increased my sales by 200% in just one month. The team is very professional and responsive.",
     date: "2024-02-15",
-    screenshot: "/feedback/feedback1.jpg",
+    screenshot: "/feedback/1.jpeg",
     platform: "Facebook",
   },
   {
     id: 2,
-    name: "Sarah Perera",
+    name: "Nadeesha",
     company: "Perera Fashions",
     rating: 5,
     comment:
       "The AI video they created for my Instagram went viral! Got over 100k views in 3 days. Highly recommended for social media marketing.",
     date: "2024-02-10",
-    screenshot: "/feedback/feedback2.jpg",
+    screenshot: "/feedback/2.jpeg",
     platform: "Instagram",
   },
   {
     id: 3,
-    name: "Kamal Fernando",
+    name: "Avishka Deshan",
     company: "Fernando's Restaurant",
     rating: 5,
     comment:
       "Their logo design and branding services transformed my business. The WhatsApp Business integration helped me connect with customers easily.",
     date: "2024-02-05",
-    screenshot: "/feedback/feedback3.jpg",
+    screenshot: "/feedback/3.jpeg",
     platform: "WhatsApp",
   },
   {
     id: 4,
-    name: "Dilshan Jayawardena",
-    company: "Dilshan Motors",
+    name: "Mesa",
+    company: "Mesa",
     rating: 4,
     comment:
       "Great TikTok marketing campaign! Reached younger audience effectively. Will definitely work with them again.",
     date: "2024-01-28",
-    screenshot: "/feedback/feedback4.jpg",
+    screenshot: "/feedback/4.jpeg",
     platform: "TikTok",
   },
   {
     id: 5,
     name: "Nadeeka Silva",
-    company: "Silva Beauty Salon",
+    company: "Hithuwakra",
     rating: 5,
     comment:
       "The post designs are absolutely stunning! My engagement rate has increased significantly since I started using their services.",
     date: "2024-01-20",
-    screenshot: "/feedback/feedback5.jpg",
-    platform: "Instagram",
+    screenshot: "/feedback/5.jpeg",
+    platform: "TikTok",
   },
   {
     id: 6,
-    name: "Thusitha Ranasinghe",
+    name: "Rashmi",
     company: "Ranasinghe Hardware",
     rating: 5,
     comment:
       "Professional team, delivered exactly what they promised. My Facebook page growth has been amazing!",
     date: "2024-01-15",
-    screenshot: "/feedback/feedback6.jpg",
+    screenshot: "/feedback/6.jpeg",
     platform: "Facebook",
   },
   {
     id: 7,
-    name: "Ruwan Pieris",
-    company: "Pieris Jewelers",
+    name: "Hirusha Induwara",
+    company: "Hirusha",
     rating: 5,
     comment:
       "Their AI video creation service is top-notch. The videos they created for my products look professional and engaging.",
     date: "2024-01-10",
-    screenshot: "/feedback/feedback7.jpg",
-    platform: "TikTok",
+    screenshot: "/feedback/7.jpeg",
+    platform: "Facebook",
   },
   {
     id: 8,
@@ -123,19 +123,52 @@ const feedbacks = [
     comment:
       "Very happy with their post boosting service. Good ROI and excellent customer support throughout the campaign.",
     date: "2024-01-05",
-    screenshot: "/feedback/feedback8.jpg",
+    screenshot: "/feedback/8.jpeg",
     platform: "Facebook",
   },
   {
     id: 9,
+    name: "Rashmi",
+    company: "Wickramasinghe Traders",
+    rating: 5,
+    comment:
+      "Best digital marketing agency in Sri Lanka! Their team understands local market needs perfectly.",
+    date: "2023-12-28",
+    screenshot: "/feedback/9.jpeg",
+    platform: "Facebook",
+  },
+  {
+    id: 10,
+    name: "Amila Thilakarathna",
+    company: "Wickramasinghe Traders",
+    rating: 5,
+    comment:
+      "Best digital marketing agency in Sri Lanka! Their team understands local market needs perfectly.",
+    date: "2023-12-28",
+    screenshot: "/feedback/10.jpeg",
+    platform: "Facebook",
+  },
+  {
+    id: 11,
     name: "Lasantha Wickramasinghe",
     company: "Wickramasinghe Traders",
     rating: 5,
     comment:
       "Best digital marketing agency in Sri Lanka! Their team understands local market needs perfectly.",
     date: "2023-12-28",
-    screenshot: "/feedback/feedback9.jpg",
-    platform: "WhatsApp",
+    screenshot: "/feedback/11.jpeg",
+    platform: "Facebook",
+  },
+  {
+    id: 12,
+    name: "Ishu",
+    company: "ISHU",
+    rating: 5,
+    comment:
+      "Best digital marketing agency in Sri Lanka! Their team understands local market needs perfectly.",
+    date: "2023-12-28",
+    screenshot: "/feedback/12.jpeg",
+    platform: "Facebook",
   },
 ];
 
@@ -376,7 +409,7 @@ const Feedback = () => {
 
         {/* Top glow — blue */}
         <div
-          className="fb-glow-top absolute -top-[150px] left-1/2 -translate-x-1/2 pointer-events-none"
+          className="fb-glow-top absolute -top-40 left-1/2 -translate-x-1/2 pointer-events-none"
           style={{
             width: "800px",
             height: "400px",
@@ -386,7 +419,7 @@ const Feedback = () => {
         />
 
         {/* CRT scanlines */}
-        <div className="fb-scan absolute inset-0 pointer-events-none z-[1]" />
+        <div className="fb-scan absolute inset-0 pointer-events-none z-10" />
 
         <ImageModal
           image={selectedImage}
@@ -394,9 +427,9 @@ const Feedback = () => {
         />
 
         {/* Inner container */}
-        <div className="relative z-[2] max-w-7xl mx-auto px-6">
+        <div className="relative z-20 max-w-7xl mx-auto px-6">
           {/* Header */}
-          <div className="text-center mb-[70px]">
+          <div className="text-center mb-20">
             <div className="flex justify-center mb-5">
               <div
                 className="fb-platform inline-flex items-center gap-2.5 font-rajdhani
@@ -600,7 +633,7 @@ const Feedback = () => {
 
                   {/* Screenshot */}
                   <div
-                    className="fb-screenshot relative h-[110px] overflow-hidden cursor-pointer"
+                    className="fb-screenshot relative h-28 overflow-hidden cursor-pointer"
                     style={{ borderTop: "1px solid rgba(99,179,237,0.08)" }}
                     onClick={() => setSelectedImage(fb.screenshot)}
                   >
@@ -754,7 +787,7 @@ const Feedback = () => {
             />
             <a
               href="#contact"
-              className="fb-cta-btn relative inline-flex items-center gap-3 px-[52px] py-[18px]
+              className="fb-cta-btn relative inline-flex items-center gap-3 px-14 py-5
                 font-rajdhani text-[14px] font-bold tracking-[0.2em] uppercase no-underline overflow-hidden
                 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
                 hover:-translate-y-0.75 hover:scale-[1.02]"

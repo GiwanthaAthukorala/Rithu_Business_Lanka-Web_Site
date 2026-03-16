@@ -185,13 +185,13 @@ const Footer = () => {
         ].map((cls, i) => (
           <div
             key={i}
-            className={`absolute w-12 h-12 pointer-events-none z-[5] ${cls}`}
+            className={`absolute w-12 h-12 pointer-events-none z-20 ${cls}`}
             style={{ borderColor: "rgba(99,179,237,0.5)" }}
           />
         ))}
 
         {/* Top blue divider */}
-        <div className="relative z-[2] flex items-center gap-3.5 px-10">
+        <div className="relative z-30 flex items-center gap-3.5 px-10">
           <div
             className="flex-1 h-px"
             style={{
@@ -233,7 +233,7 @@ const Footer = () => {
 
         {/* Hero CTA Banner */}
         <div
-          className="relative z-[2] text-center px-6 pt-18 pb-16"
+          className="relative z-30 text-center px-6 pt-18 pb-16"
           style={{ borderBottom: "1px solid rgba(99,179,237,0.14)" }}
         >
           {/* Eyebrow */}
@@ -345,7 +345,7 @@ const Footer = () => {
         </div>
 
         {/* Main Grid */}
-        <div className="relative z-[2] max-w-7xl mx-auto px-10 pt-16 max-sm:px-6 max-sm:pt-12">
+        <div className="relative z-30 max-w-7xl mx-auto px-10 pt-16 max-sm:px-6 max-sm:pt-12">
           <div className="grid grid-cols-[2fr_1fr_1fr_1.6fr] gap-14 mb-13 max-[960px]:grid-cols-2 max-[960px]:gap-10 max-sm:grid-cols-1 max-sm:gap-9">
             {/* Brand */}
             <div>
@@ -391,7 +391,7 @@ const Footer = () => {
                       (e.currentTarget.style.boxShadow = "none")
                     }
                   >
-                    <span className="relative z-[1]">{s.short}</span>
+                    <span className="relative z-10">{s.short}</span>
                   </div>
                 ))}
               </div>

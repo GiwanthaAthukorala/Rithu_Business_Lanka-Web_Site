@@ -232,7 +232,7 @@ const Contact = () => {
               "radial-gradient(circle, rgba(99,179,237,0.05) 0%, transparent 65%)",
           }}
         />
-        <div className="scan-lines absolute inset-0 pointer-events-none z-[1]" />
+        <div className="scan-lines absolute inset-0 pointer-events-none z-10" />
 
         {/* Corner decorations — blue */}
         {[
@@ -243,13 +243,13 @@ const Contact = () => {
         ].map((cls, i) => (
           <div
             key={i}
-            className={`absolute w-12 h-12 pointer-events-none z-[5] ${cls}`}
+            className={`absolute w-12 h-12 pointer-events-none z-20 ${cls}`}
             style={{ borderColor: "rgba(99,179,237,0.4)" }}
           />
         ))}
 
         {/* Container */}
-        <div className="relative z-[2] max-w-6xl mx-auto px-6">
+        <div className="relative z-30 max-w-6xl mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-18">
             <div className="flex justify-center mb-5">
